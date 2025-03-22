@@ -1,0 +1,344 @@
+profile_dashboard.html 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Profile Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/particles.css') }}">
+    <style>
+        /* Add specific positioning for the toggle button with higher specificity */
+        body #modeToggle {
+            position: fixed !important;
+            top: 20px !important;
+            right: 20px !important;
+            left: auto !important;
+            transform: none !important;
+            margin: 0 !important;
+            z-index: 9999 !important;
+        }
+        
+        /* Rest of your styles */
+        .content-wrapper {
+            position: relative;
+            min-height: 100vh;
+            width: 100%;
+            padding-top: 60px;
+        }
+        
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background-color: #0a0a0a !important;
+        }
+        
+        .dark-mode .bg-gray-800 {
+            background-color: #1a1a1a !important;
+        }
+        
+        .dark-mode .bg-gray-900 {
+            background-color: #0a0a0a !important;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+    <!-- Particles Background -->
+    <div id="particles-js"></div>
+
+    <button id="modeToggle" class="fixed top-5 bg-yellow-400 text-black font-bold py-2 px-4 rounded-full hover:bg-yellow-500 transition-all duration-300 z-[9999]" onclick="toggleMode()">Light Mode</button>
+
+    <!-- Content Wrapper -->
+    <div class="content-wrapper">
+        <div class="container mx-auto p-4">
+            <nav class="text-sm text-gray-400 mb-4">
+                <a href="/user_dashboard" class="hover:underline">Home</a> &gt; 
+                <a href="/career" class="hover:underline">Jobs</a> &gt; 
+                <span>Profile Dashboard</span>
+            </nav>
+            <h1 class="text-2xl font-bold mb-2">Welcome back, {{ user.name }}!</h1>
+            <p class="text-gray-400 mb-6">Complete your profile to improve your job matches</p>
+            
+            <div class="flex justify-between items-center mb-6">
+                <div></div> <!-- Empty div for spacing -->
+                <a href="/career" class="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-6 rounded-lg transition-all duration-300 flex items-center">
+                    <i class="fas fa-briefcase mr-2"></i> Browse Jobs
+                </a>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <div class="bg-gray-800 p-4 rounded-lg shadow">
+                    <div class="flex items-center mb-2">
+                        <div class="bg-gray-600 rounded-full h-10 w-10"></div>
+                        <div class="ml-4">
+                            <h2 class="text-lg font-semibold">PROFILE</h2>
+                            <p class="text-gray-400">75% Complete</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 mb-4">Add missing information to your profile</p>
+                    <button class="bg-yellow-500 text-black py-2 px-4 rounded">Complete Profile</button>
+                </div>
+                <div class="bg-gray-800 p-4 rounded-lg shadow">
+                    <div class="flex items-center mb-2">
+                        <div class="bg-gray-600 rounded-full h-10 w-10"></div>
+                        <div class="ml-4">
+                            <h2 class="text-lg font-semibold">RESUME</h2>
+                            <p class="text-gray-400">2 Versions</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 mb-4">Last updated 3 days ago</p>
+                    <button class="bg-yellow-500 text-black py-2 px-4 rounded mr-2">Upload New</button>
+                    <button class="bg-gray-600 text-white py-2 px-4 rounded">View All</button>
+                </div>
+                <div class="bg-gray-800 p-4 rounded-lg shadow">
+                    <div class="flex items-center mb-2">
+                        <div class="bg-gray-600 rounded-full h-10 w-10"></div>
+                        <div class="ml-4">
+                            <h2 class="text-lg font-semibold">APPLICATIONS</h2>
+                            <p class="text-gray-400">{{ applications|length }} Active</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 mb-4">4 new responses from employers</p>
+                    <button onclick="toggleApplications()" class="bg-yellow-500 text-black py-2 px-4 rounded">View Applications</button>
+                </div>
+                <div class="bg-gray-800 p-4 rounded-lg shadow">
+                    <div class="flex items-center mb-2">
+                        <div class="bg-gray-600 rounded-full h-10 w-10"></div>
+                        <div class="ml-4">
+                            <h2 class="text-lg font-semibold">JOB ALERTS</h2>
+                            <p class="text-gray-400">{{ job_alerts|length }} Alerts</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 mb-4">8 new jobs match your preferences</p>
+                    <button onclick="toggleJobAlerts()" class="bg-yellow-500 text-black py-2 px-4 rounded mr-2">View Jobs</button>
+                    <button class="bg-gray-600 text-white py-2 px-4 rounded">Settings</button>
+                </div>
+            </div>
+
+            <!-- Applications List (Hidden by Default) -->
+            <div class="bg-gray-800 p-6 rounded-lg shadow mb-6">
+                <h2 class="text-xl font-semibold mb-4">My Job Applications</h2>
+                <table class="w-full text-left">
+                    <thead>
+                        <tr>
+                            <th class="py-2">Job Title</th>
+                            <th class="py-2">Status</th>
+                            <th class="py-2">Applied On</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for application in user_applications %}
+                        <tr>
+                            <td class="py-2">{{ application.job.title }}</td>
+                            <td class="py-2">{{ application.status }}</td>
+                            <td class="py-2">{{ application.applied_on.strftime('%Y-%m-%d') }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+
+            <!-- Job Alerts List (Hidden by Default) -->
+            <div id="jobAlertsList" class="hidden bg-gray-800 p-6 rounded-lg shadow mb-6">
+                <h2 class="text-xl font-semibold mb-4">Job Alerts</h2>
+                <ul class="space-y-4">
+                    {% for job in jobs %}
+                    <li class="bg-gray-700 p-4 rounded-lg shadow flex justify-between items-center">
+                        <div>
+                            <h4 class="font-semibold">{{ job.title }}</h4>
+                            <p class="text-gray-400">{{ job.description }}</p>
+                            <p class="text-gray-400 text-sm">Vacancies: {{ job.vacancies }}</p>
+                        </div>
+                        <form method="POST" action="{{ url_for('apply_job', job_id=job.id) }}">
+                            <button type="submit" class="bg-yellow-500 text-black py-2 px-4 rounded">Apply</button>
+                        </form>
+                    </li>
+                    {% endfor %}
+                </ul>
+                
+            </div>
+            
+
+            <div class="bg-gray-800 p-6 rounded-lg shadow mb-6">
+                <h2 class="text-xl font-semibold mb-4">Profile Completion</h2>
+                <ul class="space-y-4">
+                    <li class="flex justify-between items-center">
+                        <span>Personal Information</span>
+                        <button class="text-yellow-500 hover:underline">edit</button>
+                    </li>
+                    <li class="flex justify-between items-center">
+                        <span>Work Experience</span>
+                        <button class="text-yellow-500 hover:underline">edit</button>
+                    </li>
+                    <li class="flex justify-between items-center">
+                        <span>Education</span>
+                        <button class="text-yellow-500 hover:underline">edit</button>
+                    </li>
+                    <li class="flex justify-between items-center">
+                        <span>Skills</span>
+                        <button class="text-yellow-500 hover:underline">edit</button>
+                    </li>
+                    <li class="flex justify-between items-center">
+                        <span>Portfolio</span>
+                        <button class="text-yellow-500 hover:underline">edit</button>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="bg-gray-800 p-6 rounded-lg shadow mb-6">
+                <h2 class="text-xl font-semibold mb-4">Resume Management</h2>
+                <table class="w-full text-left mb-4">
+                    <thead>
+                        <tr>
+                            <th class="py-2">Resume Name</th>
+                            <th class="py-2">Last Updated</th>
+                            <th class="py-2">Format</th>
+                            <th class="py-2">Status</th>
+                            <th class="py-2"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="py-2">Software_Developer_Resume.pdf</td>
+                            <td class="py-2">3 days ago</td>
+                            <td class="py-2">PDF</td>
+                            <td class="py-2">Active</td>
+                            <td class="py-2"><button class="text-yellow-500 hover:underline">edit</button></td>
+                        </tr>
+                        <tr>
+                            <td class="py-2">UX_Designer_Resume.docx</td>
+                            <td class="py-2">1 week ago</td>
+                            <td class="py-2">DOCX</td>
+                            <td class="py-2">Active</td>
+                            <td class="py-2"><button class="text-yellow-500 hover:underline">edit</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button class="bg-yellow-500 text-black py-2 px-4 rounded">Upload New Resume</button>
+            </div>
+
+            <div class="bg-gray-800 p-6 rounded-lg shadow mb-6">
+                <h2 class="text-xl font-semibold mb-4">Application Tracking</h2>
+                <div class="flex space-x-4 mb-4">
+                    <button class="text-yellow-500 hover:underline">All Applications</button>
+                    <button class="text-gray-400 hover:underline">In Progress</button>
+                    <button class="text-gray-400 hover:underline">Interviews</button>
+                    <button class="text-gray-400 hover:underline">Offers</button>
+                    <button class="text-gray-400 hover:underline">Rejected</button>
+                </div>
+                <table class="w-full text-left mb-4">
+                    <thead>
+                        <tr>
+                            <th class="py-2">Job Title</th>
+                            <th class="py-2">Company</th>
+                            <th class="py-2">Applied Date</th>
+                            <th class="py-2">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="py-2">Senior UX Designer</td>
+                            <td class="py-2">TechCorp Inc.</td>
+                            <td class="py-2">Today</td>
+                            <td class="py-2">Applied</td>
+                        </tr>
+                        <tr>
+                            <td class="py-2">Frontend Developer</td>
+                            <td class="py-2">Global Solutions</td>
+                            <td class="py-2">2 days ago</td>
+                            <td class="py-2">In Review</td>
+                        </tr>
+                        <tr>
+                            <td class="py-2">Product Manager</td>
+                            <td class="py-2">Innovate Labs</td>
+                            <td class="py-2">1 week ago</td>
+                            <td class="py-2">Interview Scheduled</td>
+                        </tr>
+                        <tr>
+                            <td class="py-2">Data Analyst</td>
+                            <td class="py-2">Future Systems</td>
+                            <td class="py-2">2 weeks ago</td>
+                            <td class="py-2">Rejected</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button class="bg-yellow-500 text-black py-2 px-4 rounded">View All Applications</button>
+            </div>
+
+            <div class="bg-gray-800 p-6 rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-4">Recommended Jobs</h2>
+                <ul class="space-y-4 mb-4">
+                    <li class="flex justify-between items-center">
+                        <div>
+                            <h3 class="font-semibold">Senior UX/UI Designer</h3>
+                            <p class="text-gray-400">TechCorp Inc. • Remote • $90K-$120K</p>
+                        </div>
+                        <button class="bg-yellow-500 text-black py-2 px-4 rounded">View</button>
+                    </li>
+                    <li class="flex justify-between items-center">
+                        <div>
+                            <h3 class="font-semibold">Frontend Developer</h3>
+                            <p class="text-gray-400">Global Solutions • New York • $85K-$100K</p>
+                        </div>
+                        <button class="bg-yellow-500 text-black py-2 px-4 rounded">View</button>
+                    </li>
+                    <li class="flex justify-between items-center">
+                        <div>
+                            <h3 class="font-semibold">Product Manager</h3>
+                            <p class="text-gray-400">Innovate Labs • San Francisco • $110K-$140K</p>
+                        </div>
+                        <button class="bg-yellow-500 text-black py-2 px-4 rounded">View</button>
+                    </li>
+                </ul>
+                <button class="bg-yellow-500 text-black py-2 px-4 rounded">View All Recommendations</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Dark mode toggle functionality
+        function toggleMode() {
+            const body = document.body;
+            const button = document.getElementById("modeToggle");
+            
+            body.classList.toggle("dark-mode");
+            if (body.classList.contains("dark-mode")) {
+                localStorage.setItem("mode", "dark");
+                button.textContent = "Light Mode";
+            } else {
+                localStorage.setItem("mode", "light");
+                button.textContent = "Dark Mode";
+            }
+        }
+
+        // Check for saved mode preference
+        window.onload = function() {
+            const savedMode = localStorage.getItem("mode");
+            const button = document.getElementById("modeToggle");
+            
+            if (savedMode === "light") {
+                document.body.classList.remove("dark-mode");
+                button.textContent = "Dark Mode";
+            } else {
+                document.body.classList.add("dark-mode");
+                button.textContent = "Light Mode";
+            }
+        }
+
+        // Toggle Applications List
+        function toggleApplications() {
+            const applicationsList = document.getElementById('applicationsList');
+            applicationsList.classList.toggle('hidden');
+        }
+
+        // Toggle Job Alerts List
+        function toggleJobAlerts() {
+            const jobAlertsList = document.getElementById('jobAlertsList');
+            jobAlertsList.classList.toggle('hidden');
+        }
+    </script>
+    <script src="{{ url_for('static', filename='js/particles.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,200 @@
+/* Main container styles */
+.jobs-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Header styles */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.page-title {
+    font-size: 2rem;
+    color: #FFD700;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Back button styles */
+.back-button {
+    background-color: #FFD700;
+    color: #000;
+    padding: 0.75rem 1.5rem;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.back-button:hover {
+    background-color: #FFC300;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(255, 215, 0, 0.2);
+}
+
+.back-button i {
+    font-size: 1.1rem;
+}
+
+/* Table container styles */
+.table-container {
+    background-color: rgba(34, 34, 34, 0.9);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 2rem;
+}
+
+/* Table styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: transparent;
+}
+
+/* Table header styles */
+thead tr {
+    background-color: #FFD700;
+}
+
+th {
+    color: #000;
+    font-weight: bold;
+    padding: 1.2rem 1rem;
+    text-align: left;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+}
+
+/* Table body styles */
+td {
+    padding: 1.2rem 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+/* Table row hover effect */
+tbody tr {
+    transition: all 0.3s ease;
+}
+
+tbody tr:hover {
+    background-color: rgba(255, 215, 0, 0.1);
+    transform: translateX(5px);
+}
+
+/* Job title styles */
+.job-title {
+    font-weight: bold;
+    color: #FFD700;
+}
+
+/* Job description styles */
+.job-description {
+    color: #ccc;
+    max-width: 400px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Vacancies badge styles */
+.vacancies-badge {
+    background-color: rgba(255, 215, 0, 0.2);
+    color: #FFD700;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: bold;
+    display: inline-block;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .jobs-container {
+        padding: 1rem;
+    }
+
+    .page-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+
+    .table-container {
+        overflow-x: auto;
+    }
+
+    table {
+        min-width: 600px;
+    }
+
+    th, td {
+        padding: 1rem 0.8rem;
+    }
+
+    .job-description {
+        max-width: 200px;
+    }
+}
+
+/* Dark mode enhancements */
+body {
+    background-color: #121212;
+    color: #fff;
+}
+
+/* Custom scrollbar */
+.table-container::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.table-container::-webkit-scrollbar-track {
+    background: #1a1a1a;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background: #FFD700;
+    border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+    background: #FFC300;
+}
+
+/* Empty state styles */
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: #666;
+}
+
+.empty-state i {
+    font-size: 3rem;
+    color: #FFD700;
+    margin-bottom: 1rem;
+}
+
+/* Animation for new jobs */
+@keyframes highlightNew {
+    from {
+        background-color: rgba(255, 215, 0, 0.2);
+    }
+    to {
+        background-color: transparent;
+    }
+}
+
+.new-job {
+    animation: highlightNew 2s ease-out;
+} 

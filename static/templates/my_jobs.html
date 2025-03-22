@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Jobs</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <h2>Job Listings</h2>
+    <table border="1">
+        <tr>
+            <th>Job Title</th>
+            <th>Description</th>
+            <th>Vacancies</th>
+        </tr>
+        {% for job in jobs %}
+        <tr>
+            <td>{{ job.title }}</td>
+            <td>{{ job.description }}</td>
+            <td>{{ job.vacancies }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <a href="{{ url_for('employee_dashboard') }}">Back to Dashboard</a>
+</body>
+</html>

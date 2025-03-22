@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>JobPortal Admin Dashboard</title>
+
+  <!-- FontAwesome & Google Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+
+  <!-- Custom Styles -->
+  <style>
+    /* General Page Styling */
+    body {
+        background-color: #000000 !important;
+        color: #ffffff !important;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    /* Light Mode Styles */
+    body.light-mode {
+        background-color: #f8f9fa !important;
+        color: #212529 !important;
+    }
+
+    .light-mode .sidebar {
+        background-color: #e9ecef;
+        color: #212529;
+    }
+
+    .light-mode .sidebar .nav-link {
+        color: #212529 !important;
+    }
+
+    .light-mode .card {
+        background-color: #ffffff !important;
+        color: #212529 !important;
+        border: 1px solid #dee2e6 !important;
+    }
+
+    .light-mode .card-header {
+        background-color: #f8f9fa !important;
+        color: #212529 !important;
+    }
+
+    .light-mode .table {
+        background-color: #ffffff !important;
+        color: #212529 !important;
+    }
+
+    .light-mode .navbar {
+        background-color: #f8f9fa !important;
+        border-bottom: 2px solid #FFD700 !important;
+    }
+
+    /* Sidebar (Sidenav) */
+    .sidebar {
+        width: 280px;
+        min-height: 100vh;
+        background-color: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 20px;
+    }
+
+    .sidebar .nav-link {
+        color: white !important;
+        font-size: 1.1rem;
+        padding: 12px;
+        font-weight: bold;
+    }
+
+    .sidebar .nav-link:hover, 
+    .sidebar .nav-link.active {
+        background-color: #ffcc00;
+        color: black !important;
+        border-radius: 5px;
+    }
+
+    /* Fixing text visibility in buttons */
+    .btn-warning, .btn-primary, .btn-danger {
+        font-size: 14px;
+        padding: 10px 15px;
+        font-weight: bold;
+        border-radius: 5px;
+        color: black !important; /* Ensures text is readable */
+        text-shadow: none !important;
+    }
+
+    /* Adjusting specific button styles */
+    .btn-primary {
+        background-color: #FFD700 !important;
+        border-color: #FFD700 !important;
+        color: black !important;
+    }
+
+    .btn-primary:hover {
+        background-color: #E5C100 !important;
+        border-color: #E5C100 !important;
+    }
+
+    .btn-danger {
+        background-color: #b02a37 !important;
+        border-color: #DC3545 !important;
+        color: white !important;
+    }
+
+    .btn-danger:hover {
+        background-color: #B02A37 !important;
+        border-color: #B02A37 !important;
+    }
+
+    /* Sidebar Disabled Link Visibility */
+    .sidebar .nav-link:disabled {
+        background-color: #ffcc00 !important;
+        color: #000000 !important;
+        opacity: 0.8;
+    }
+
+    /* Navbar */
+    .navbar {
+        background-color: #000000 !important;
+        border-bottom: 2px solid #FFD700 !important;
+    }
+
+    .navbar .breadcrumb {
+        color: #FFD700 !important;
+    }
+
+    .navbar .breadcrumb a {
+        color: #FFD700 !important;
+        font-weight: bold;
+    }
+
+    /* Cards */
+    .card {
+        background-color: #1a1a1a !important;
+        color: #ffffff !important;
+        border: 1px solid #FFD700 !important;
+        border-radius: 8px;
+    }
+
+    .card-header {
+        background-color: #000000 !important;
+        color: #FFD700 !important;
+        font-weight: bold;
+    }
+
+    /* Tables */
+    .table {
+        background-color: #000000 !important;
+        color: #ffffff !important;
+    }
+
+    .table thead {
+        background-color: #ffcc00 !important;
+        color: #000000 !important;
+    }
+
+    .table tbody tr:hover {
+        background-color: #222222 !important;
+    }
+
+    /* Footer */
+    .footer {
+        background-color: #1a1a1a !important;
+        color: #FFD700 !important;
+        text-align: center;
+        padding: 15px;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #000000;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #FFD700;
+        border-radius: 10px;
+    }
+
+    /* Links */
+    a {
+        color: #FFD700 !important;
+    }
+
+    a:hover {
+        color: #E5C100 !important;
+    }
+
+    /* Toggle Button */
+    .toggle-mode {
+        position: fixed;
+        top: 20px;
+        right: 30px;
+        padding: 10px 20px;
+        border-radius: 30px;
+        font-size: 14px;
+        background-color: #FFD700;
+        color: #000000;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        box-shadow: 0 2px 10px rgba(255, 215, 0, 0.2);
+        z-index: 9999; /* Increased z-index to ensure it's always on top */
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .toggle-mode:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+    }
+
+    .toggle-mode:before {
+        content: '🌙';
+        font-size: 16px;
+    }
+
+    .light-mode .toggle-mode:before {
+        content: '☀️';
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .sidebar {
+            width: 100%;
+            height: auto;
+            position: relative;
+        }
+    }
+
+  </style>
+
+</head>
+
+<body>
+  <button class="toggle-mode" onclick="toggleMode()">Light Mode</button>
+  <div class="d-flex">
+    <!-- Sidebar -->
+    <aside class="sidebar p-3">
+      <div class="profile text-center">
+        <img src="assets/images/admin-profile.jpg" alt="Admin" class="rounded-circle border border-warning" width="100">
+        <h5 class="text-warning mt-2">{{ user.name }}</h5>
+      </div>
+      <ul class="nav flex-column">
+        <li class="nav-item"><a href="/admin_dashboard" class="nav-link"><i class="fas fa-home"></i> Dashboard</a></li>
+        <li class="nav-item"><a href="/view_team_members" class="nav-link"><i class="fas fa-users"></i> Users</a></li>
+        <li class="nav-item"><a href="/view_jobs" class="nav-link"><i class="fas fa-briefcase"></i> Jobs</a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-building"></i> Employers</a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-chart-bar"></i> Reports</a></li>
+        <hr>
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-cog"></i> Settings</a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-bell"></i> Notifications</a></li>
+        <li class="nav-item"><a href="/logout" class="nav-link"><i class="fas fa-sign-out-alt"></i> Log Out</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="container-fluid p-4">
+      <h3 class="fw-bold text-warning">Dashboard Overview </h3>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="card p-3 text-center">
+            <i class="fas fa-user text-primary fa-2x"></i>
+            <h5>{{ applicants | length}}</h5>
+            <p>Total Applicants</p>
+            <button class="btn btn-primary">View Details</button>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card p-3 text-center">
+            <i class="fas fa-building text-warning fa-2x"></i>
+            <h5>{{ user | length}} </h5>
+            <p>Total Employeers</p>
+            <button class="btn btn-warning">View Employers</button>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card p-3 text-center">
+            <i class="fas fa-briefcase text-danger fa-2x"></i>
+            <h5>{{ jobs | length}}</h5>
+            <p>Total job listings</p>
+            <button class="btn btn-primary">View Jobs</button>
+          </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 text-center">
+              <i class="fas fa-user-tie text text-danger fa-2x"></i>
+              <h5>None</h5>
+              <p>Total Hiring</p>
+              <button class="btn btn-primary">View Jobs</button>
+            </div>
+          </div>
+      </div>
+
+      <h4 class="mt-4 text-warning">User Activity Trends</h4>
+      <div class="card p-4">
+        <ul class="nav nav-tabs" id="activityTabs">
+          <li class="nav-item">
+            <a class="nav-link active" data-bs-toggle="tab" href="#daily">Daily</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" href="#weekly">Weekly</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" href="#monthly">Monthly</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" href="#quarterly">Quarterly</a>
+          </li>
+        </ul>
+
+        <div class="tab-content mt-3" style="max-height: 300px; overflow-y: auto;">
+          <div id="daily" class="tab-pane fade show active">
+            <p>Daily traffic chart would appear here.</p>
+          </div>
+          <div id="weekly" class="tab-pane fade">
+            <p>Weekly traffic chart would appear here.</p>
+          </div>
+          <div id="monthly" class="tab-pane fade">
+            <p>Monthly traffic chart would appear here.</p>
+          </div>
+          <div id="quarterly" class="tab-pane fade">
+            <p>Quarterly traffic chart would appear here.</p>
+          </div>
+        </div>
+      </div>
+      <h4 class="text-warning mt-4">Top Employers</h4>
+      <table class="table table-dark table-hover">
+        <thead>
+            <tr>
+                <th>Company</th>
+                <th>Job Listings</th>
+                <th>Hires</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for company in user[1::] %}
+            <tr>
+                <td>
+                    <img src="{{ company.logo }}" class="rounded-circle" width="40"> {{ company.name }}
+                </td>
+                <td>{{ company.job_listings }} </td>
+                <td>{{ company.last_post }}</td>
+                <td>{{ company.hires }}</td>
+                <td class="{% if company.status == 'Active' %}text-success{% elif company.status == 'Pending' %}text-danger{% elif company.status == 'Review' %}text-warning{% endif %}">
+                    {{ company.status }}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+      <button class="btn btn-warning mb-3">View All Employers</button>
+
+      <h3 class="text-warning mt-4">Recent Job Seeker Registrations</h3>
+<table class="table table-dark table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Position</th>
+            <th>Default</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for applicant in applicants %}
+        <tr>
+            <td>{{ applicant.name }}</td>
+            <td>{{ applicant.position }}</td>
+            <td>{{ applicant.approval }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+      <button class="btn btn-warning btn-sm mt-2 px-3">View All Applicants</button>
+    </main>
+  </div>
+ 
+
+  <!-- Bootstrap Bundle JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
+  <script src="{{ url_for('static', filename='js/chartadmin.js') }}"></script> 
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+
+  <!-- CountUp.js for Animations -->
+  <!-- Custom Dashboard Script -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+    // Handle navigation active state persistence
+    let savedActive = localStorage.getItem("activeNav");
+    if (savedActive) {
+        document.querySelectorAll(".nav-link").forEach(link => {
+            if (link.innerText.trim() === savedActive) {
+                link.classList.add("active");
+            }
+        });
+    }
+
+    document.querySelectorAll(".nav-link").forEach(link => {
+        link.addEventListener("click", function () {
+            document.querySelectorAll(".nav-link").forEach(item => item.classList.remove("active"));
+            this.classList.add("active");
+            localStorage.setItem("activeNav", this.innerText.trim());
+        });
+    });
+
+    // CountUp.js for animated counters
+    let counters = document.querySelectorAll(".counter");
+    counters.forEach(counter => {
+        let countUp = new CountUp(counter, parseInt(counter.innerText.replace(",", "")));
+        if (!countUp.error) countUp.start();
+    });
+
+    // Function to create charts dynamically
+    function createChart(elementId, label, dataValues, borderColor, bgColor) {
+        let container = document.getElementById(elementId);
+        container.innerHTML = ""; // Clear previous chart if exists
+        let canvas = document.createElement("canvas");
+        container.appendChild(canvas);
+
+        new Chart(canvas, {
+            type: "line",
+            data: {
+                labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
+                datasets: [{
+                    label: label,
+                    data: dataValues,
+                    borderColor: borderColor,
+                    backgroundColor: bgColor,
+                    borderWidth: 2,
+                    fill: true,
+                }]
+            }
+        });
+    }
+
+    // Load Daily Chart by default
+    createChart("daily", "Daily Users", [20, 40, 50, 80, 100], "#ffc107", "rgba(255, 193, 7, 0.2)");
+
+    // Event Listeners for Tab Changes (Weekly, Monthly, Quarterly)
+    document.querySelector('[href="#weekly"]').addEventListener("click", function () {
+        createChart("weekly", "Weekly Users", [100, 250, 320, 420], "#007bff", "rgba(0, 123, 255, 0.2)");
+    });
+
+    document.querySelector('[href="#monthly"]').addEventListener("click", function () {
+        createChart("monthly", "Monthly Users", [500, 800, 1200, 1500], "#28a745", "rgba(40, 167, 69, 0.2)");
+    });
+
+    document.querySelector('[href="#quarterly"]').addEventListener("click", function () {
+        createChart("quarterly", "Quarterly Users", [1500, 2000, 2500, 3200], "#dc3545", "rgba(220, 53, 69, 0.2)");
+    });
+
+    // Check for saved mode preference
+    if (localStorage.getItem("mode") === "light") {
+        document.body.classList.add("light-mode");
+        document.querySelector(".toggle-mode").textContent = "Dark Mode";
+    }
+
+    // Recent Job Seeker Click Event (View Profile)
+    document.querySelectorAll(".fa-eye").forEach(icon => {
+        icon.addEventListener("click", function () {
+            let row = this.closest("tr"); // Get the row
+            let name = row.children[1].innerText; // Get Job Seeker Name
+            let position = row.children[2].innerText; // Get Position
+
+            alert(`Viewing Profile:\n\nName: ${name}\nPosition: ${position}`);
+            // Replace alert with a modal or navigate to the user's profile page if needed
+        });
+    });
+});
+
+// Toggle between light and dark mode
+function toggleMode() {
+    document.body.classList.toggle("light-mode");
+    
+    // Update button text
+    const button = document.querySelector(".toggle-mode");
+    if (document.body.classList.contains("light-mode")) {
+        button.textContent = "Dark Mode";
+        // Save preference
+        localStorage.setItem("mode", "light");
+    } else {
+        button.textContent = "Light Mode";
+        // Save preference
+        localStorage.setItem("mode", "dark");
+    }
+}
+  </script>
+
+  <!--  Background -->
+  <div id="-js"></div>
+
+  <!-- Scripts -->
+  <script src="{{ url_for('static', filename='js/.min.js') }}"></script>
+  <script>
+    // Initialize 
+    JS('-js', {
+        particles: {
+            number: {
+                value: 80,
+                density: {
+                    enable: true,
+                    value_area: 800
+                }
+            },
+            color: {
+                value: '#ffffff'
+            },
+            shape: {
+                type: 'circle'
+            },
+            opacity: {
+                value: 0.5,
+                random: false
+            },
+            size: {
+                value: 3,
+                random: true
+            },
+            line_linked: {
+                enable: true,
+                distance: 150,
+                color: '#ffffff',
+                opacity: 0.4,
+                width: 1
+            },
+            move: {
+                enable: true,
+                speed: 6,
+                direction: 'none',
+                random: false,
+                straight: false,
+                out_mode: 'out',
+                bounce: false
+            }
+        },
+        interactivity: {
+            detect_on: 'canvas',
+            events: {
+                onhover: {
+                    enable: true,
+                }
+            }
+        }
+    });
+  </script>
+</body>
+</html>

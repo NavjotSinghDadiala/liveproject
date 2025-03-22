@@ -1,0 +1,69 @@
+<!--THIS TEMPLATE RENDERS IN EMPLOYEE DASHBOARD TO VIEW THE JOB POSTINGS -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Postings</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/jobs.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <div class="jobs-container">
+        <div class="page-header">
+            <h1 class="page-title">
+                <i class="fas fa-briefcase"></i> Job Postings
+            </h1>
+            <a href="{{ url_for('employee_dashboard') }}" class="back-button">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+
+        <div class="table-container">
+            {% if jobs %}
+            <table>
+                <thead>
+                    <tr>
+                        <th><i class="fas fa-tag"></i> Job Title</th>
+                        <th><i class="fas fa-info-circle"></i> Description</th>
+                        <th><i class="fas fa-users"></i> Vacancies</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for job in jobs %}
+                    <tr class="{% if job.is_new %}new-job{% endif %}">
+                        <td class="job-title">{{ job.title }}</td>
+                        <td class="job-description">{{ job.description }}</td>
+                        <td>
+                            <span class="vacancies-badge">
+                                {{ job.vacancies }} Position{% if job.vacancies != 1 %}s{% endif %}
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-state">
+                <i class="fas fa-folder-open"></i>
+                <p>No job postings available at the moment.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Optional: Add JavaScript for any interactive features -->
+    <script>
+        // Highlight new jobs
+        document.addEventListener('DOMContentLoaded', function() {
+            const newJobs = document.querySelectorAll('.new-job');
+            newJobs.forEach(job => {
+                setTimeout(() => {
+                    job.classList.remove('new-job');
+                }, 2000);
+            });
+        });
+    </script>
+</body>
+</html>

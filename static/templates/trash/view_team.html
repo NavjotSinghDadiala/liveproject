@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Members</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/team.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <div class="team-container">
+        <div class="page-header">
+            <h1 class="page-title">
+                <i class="fas fa-users"></i> Team Members
+            </h1>
+            <a href="{{ url_for('employee_dashboard') }}" class="back-button">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+
+        {% if team_members %}
+        <div class="team-grid">
+            {% for member in team_members %}
+            <div class="team-member-card {% if member.is_new %}new-member{% endif %}">
+                <span class="status-badge {% if member.is_active %}status-active{% else %}status-offline{% endif %}">
+                    {% if member.is_active %}Active{% else %}Offline{% endif %}
+                </span>
+                
+                <div class="member-avatar">
+                    {% if member.avatar %}
+                    <img src="{{ member.avatar }}" alt="{{ member.name }}'s avatar">
+                    {% else %}
+                    <i class="fas fa-user"></i>
+                    {% endif %}
+                </div>
+
+                <div class="member-info">
+                    <h2 class="member-name">{{ member.name }}</h2>
+                    <p class="member-role">{{ member.role }}</p>
+
+                    <div class="member-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">{{ member.projects|default(0) }}</div>
+                            <div class="stat-label">Projects</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">{{ member.tasks_completed|default(0) }}</div>
+                            <div class="stat-label">Tasks Done</div>
+                        </div>
+                    </div>
+
+                    <div class="member-contact">
+                        <a href="mailto:{{ member.email }}" class="contact-button email-button">
+                            <i class="fas fa-envelope"></i> Contact
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-users-slash"></i>
+            <p>No team members found</p>
+            <p>Start building your team by adding members</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        // Animation for new members
+        document.addEventListener('DOMContentLoaded', function() {
+            const newMembers = document.querySelectorAll('.new-member');
+            newMembers.forEach((member, index) => {
+                setTimeout(() => {
+                    member.style.opacity = '0';
+                    member.classList.remove('new-member');
+                    requestAnimationFrame(() => {
+                        member.style.opacity = '1';
+                    });
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,42 @@
+<!--TEMPLATE NOT IN USE -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Applications</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <table class="w-full text-left">
+        <thead>
+            <tr>
+                <th class="py-2">Applicant</th>
+                <th class="py-2">Job Title</th>
+                <th class="py-2">Status</th>
+                <th class="py-2">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for application, applicant, job in job_applications %}
+            <tr>
+                <td class="py-2">{{ applicant.name }}</td>
+                <td class="py-2">{{ job.title }}</td>
+                <td class="py-2">{{ application.status }}</td>
+                <td class="py-2">
+                    <form action="{{ url_for('update_application', app_id=application.id, status='Approved') }}" method="post">
+                        <button type="submit" class="bg-green-500 text-white px-2 py-1 rounded">Approve</button>
+                    </form>
+                    <form action="{{ url_for('update_application', app_id=application.id, status='Rejected') }}" method="post">
+                        <button type="submit" class="bg-red-500 text-white px-2 py-1 rounded">Reject</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <a href="{{ url_for('employee_dashboard') }}">Back to Dashboard</a>
+</body>
+</html>

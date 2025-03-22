@@ -1,0 +1,387 @@
+/* Main container styles */
+.team-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Light/Dark Mode Styles */
+body {
+    background-color: #121212;
+    color: #ffffff;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body.light-mode {
+    background-color: #e0e5ec;
+    color: #2d3436;
+}
+
+/* Toggle Button */
+.toggle-mode {
+    position: fixed;
+    top: 20px;
+    right: 30px;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-size: 14px;
+    background-color: #FFD700;
+    color: #000000;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    box-shadow: 0 2px 10px rgba(255, 215, 0, 0.2);
+    z-index: 9999;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.toggle-mode:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+}
+
+.toggle-mode:before {
+    content: '🌙';
+    font-size: 16px;
+}
+
+.light-mode .toggle-mode:before {
+    content: '☀️';
+}
+
+/* Header styles */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3rem;
+}
+
+.page-title {
+    font-size: 2rem;
+    color: #FFD700;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.light-mode .page-title {
+    color: #636e72;
+}
+
+.page-title i {
+    font-size: 1.8rem;
+}
+
+/* Back button styles */
+.back-button {
+    background-color: #FFD700;
+    color: #000;
+    padding: 0.75rem 1.5rem;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.light-mode .back-button {
+    background-color: #b2bec3;
+    color: #2d3436;
+}
+
+.back-button:hover {
+    background-color: #FFC300;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(255, 215, 0, 0.2);
+}
+
+.light-mode .back-button:hover {
+    background-color: #95a5a6;
+    box-shadow: 0 4px 8px rgba(178, 190, 195, 0.3);
+}
+
+/* Team grid layout */
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+/* Team member card styles */
+.team-member-card {
+    background: rgba(34, 34, 34, 0.9);
+    border-radius: 15px;
+    padding: 2rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.light-mode .team-member-card {
+    background: #f5f6fa;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.team-member-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(255, 215, 0, 0.1);
+}
+
+.light-mode .team-member-card:hover {
+    box-shadow: 0 8px 16px rgba(178, 190, 195, 0.2);
+}
+
+.team-member-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(to right, #FFD700, #FFC300);
+}
+
+.light-mode .team-member-card::before {
+    background: linear-gradient(to right, #b2bec3, #95a5a6);
+}
+
+.member-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin: 0 auto 1.5rem;
+    border: 3px solid #FFD700;
+    padding: 3px;
+    background-color: #1a1a1a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.light-mode .member-avatar {
+    background-color: #dfe6e9;
+    border-color: #b2bec3;
+}
+
+.member-avatar i {
+    font-size: 2.5rem;
+    color: #FFD700;
+}
+
+.light-mode .member-avatar i {
+    color: #636e72;
+}
+
+.member-info {
+    text-align: center;
+}
+
+.member-name {
+    font-size: 1.4rem;
+    color: #FFD700;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.light-mode .member-name {
+    color: #2d3436;
+}
+
+.member-role {
+    color: #ccc;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.light-mode .member-role {
+    color: #636e72;
+}
+
+.member-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 1rem;
+    background: rgba(255, 215, 0, 0.1);
+    border-radius: 10px;
+}
+
+.light-mode .stat-item {
+    background: rgba(178, 190, 195, 0.2);
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    color: #FFD700;
+    font-weight: bold;
+    margin-bottom: 0.3rem;
+}
+
+.light-mode .stat-value {
+    color: #2d3436;
+}
+
+.stat-label {
+    color: #ccc;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+}
+
+.light-mode .stat-label {
+    color: #636e72;
+}
+
+.member-contact {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.contact-button {
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.email-button {
+    background-color: rgba(255, 215, 0, 0.2);
+    color: #FFD700;
+}
+
+.light-mode .email-button {
+    background-color: rgba(178, 190, 195, 0.3);
+    color: #2d3436;
+}
+
+.email-button:hover {
+    background-color: rgba(255, 215, 0, 0.3);
+}
+
+.light-mode .email-button:hover {
+    background-color: rgba(178, 190, 195, 0.5);
+}
+
+.status-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.status-active {
+    background-color: rgba(40, 167, 69, 0.2);
+    color: #28a745;
+}
+
+.light-mode .status-active {
+    background-color: rgba(46, 213, 115, 0.2);
+    color: #2d3436;
+}
+
+.status-offline {
+    background-color: rgba(108, 117, 125, 0.2);
+    color: #6c757d;
+}
+
+.light-mode .status-offline {
+    background-color: rgba(178, 190, 195, 0.3);
+    color: #636e72;
+}
+
+/* Empty state styles */
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: rgba(34, 34, 34, 0.9);
+    border-radius: 15px;
+}
+
+.light-mode .empty-state {
+    background: #f5f6fa;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.empty-state i {
+    font-size: 4rem;
+    color: #FFD700;
+    margin-bottom: 1.5rem;
+}
+
+.light-mode .empty-state i {
+    color: #636e72;
+}
+
+.empty-state p {
+    color: #ccc;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.light-mode .empty-state p {
+    color: #636e72;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .team-container {
+        padding: 1rem;
+    }
+
+    .page-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .team-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .member-stats {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Animation for new members */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.new-member {
+    animation: fadeIn 0.5s ease-out forwards;
+} 

@@ -1,0 +1,75 @@
+<!--THIS TEMPLATE IS USED INSIDE EMPLOYEE DASHBOARD TO RENDER OR SEE APPLICANTS APPLIED FOR JOB-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Applicants</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/applicants.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+</head>
+<body class="bg-gray-900 text-white">
+    <div class="applicants-container">
+        <div class="page-header">
+            <h1 class="page-title">
+                <i class="fas fa-users"></i> Applicant Management
+            </h1>
+            <a href="{{ url_for('employee_dashboard') }}" class="back-button">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+
+        {% if applicants %}
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Resume</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for applicant in applicants %}
+                    <tr>
+                        <td>{{ applicant.name }}</td>
+                        <td>{{ applicant.email }}</td>
+                        <td>
+                            <a href="{{ url_for('static', filename='resumes/' + applicant.resume) }}" 
+                               target="_blank" 
+                               class="resume-link">
+                                <i class="fas fa-file-alt"></i> View Resume
+                            </a>
+                        </td>
+                        <td>
+                            <span class="status {% if applicant.approval %}status-approved{% else %}status-pending{% endif %}">
+                                {% if applicant.approval %}Approved{% else %}Pending{% endif %}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <form action="{{ url_for('approve_applicant', applicant_email=applicant.email) }}" method="post">
+                                    <button type="submit" class="action-button approve-button">
+                                        <i class="fas fa-check"></i> Approve
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-user-slash"></i>
+            <p>No applicants found</p>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
