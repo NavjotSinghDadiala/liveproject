@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Details | JobPortal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/job_detail_dark.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/particles.css') }}">
+</head>
+<body>
+    <!-- Particles Background -->
+    <div id="particles-js"></div>
+
+    <button class="toggle-mode" onclick="toggleMode()">Light Mode</button>
+
+    <div class="container">
+        <!-- Breadcrumb Navigation -->
+        <nav>
+            <a href="/user_dashboard">Home</a> > <a href="/career">Jobs</a> > <span id="job-title-nav"></span>
+        </nav>
+
+        <!-- Back Button -->
+        <a href="/career" class="back-button"><i class="fas fa-arrow-left"></i> Back to Jobs</a>
+
+        <!-- Job Header -->
+        <h1 id="job-title"></h1>
+        <h2 id="company-name"></h2>
+        <p id="location"><i class="fas fa-map-marker-alt"></i> <span id="location-text"></span></p>
+
+        <div class="job-meta">
+            <span><i class="fas fa-money-bill-wave"></i> <span id="salary"></span></span>
+            <span><i class="fas fa-briefcase"></i> <span id="job-type"></span></span>
+            <span><i class="fas fa-clock"></i> <span id="posted-time"></span></span>
+            <span><i class="fas fa-calendar-alt"></i> <span id="application-deadline"></span></span>
+        </div>
+
+        <button class="apply-btn"><i class="fas fa-paper-plane"></i> Apply Now</button>
+
+        <!-- Job Description -->
+        <h3><i class="fas fa-info-circle"></i> Job Description</h3>
+        <p id="job-description"></p>
+
+        <h3><i class="fas fa-tasks"></i> Key Responsibilities</h3>
+        <ul id="responsibilities-list"></ul>
+
+        <h3><i class="fas fa-clipboard-check"></i> Requirements</h3>
+        <ul id="requirements-list"></ul>
+
+        <h3><i class="fas fa-gift"></i> Benefits</h3>
+        <ul id="benefits-list"></ul>
+
+        <!-- About the Company -->
+        <h3><i class="fas fa-building"></i> About the Company</h3>
+        <div class="company-info">
+            <h4 id="company-info-name"></h4>
+            <p id="company-info-description"></p>
+            <button><i class="fas fa-external-link-alt"></i> Visit Company Page</button>
+            <button><i class="fas fa-briefcase"></i> See All Jobs</button>
+        </div>
+
+        <!-- Similar Jobs -->
+        <h3><i class="fas fa-th-list"></i> Similar Jobs</h3>
+        <div id="similar-jobs"></div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/job_detail.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/particles.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html> 

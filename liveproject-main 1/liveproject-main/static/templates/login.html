@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Prevent caching of this page -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Login Form</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/loginstyle.css') }}">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/particles.css') }}">
+    <style>
+        /* Flash message styles */
+        .flash-messages {
+            margin-bottom: 20px;
+        }
+        .alert {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            background-color: rgba(0,0,0,0.7);
+        }
+        .alert-danger {
+            color: red;
+        }
+        .alert-success {
+            color: green;
+        }
+        .alert-info {
+            color: blue;
+        }
+        /* Default dark mode styles */
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        /* Light mode override styles */
+        body.light-mode {
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        .login-box {
+            position: relative;
+            width: 400px;
+            background: rgba(25, 25, 25, 0.9);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+        }
+        .input-box {
+            position: relative;
+            margin: 30px 0;
+        }
+        .input-box input {
+            width: 100%;
+            padding: 10px 0;
+            font-size: 16px;
+            color: #fff;
+            border: none;
+            border-bottom: 2px solid #FFD700;
+            outline: none;
+            background: transparent;
+        }
+        .input-box label {
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 10px 0;
+            font-size: 16px;
+            color: #FFD700;
+            pointer-events: none;
+            transition: 0.5s;
+        }
+        .input-box input:focus ~ label,
+        .input-box input:valid ~ label {
+            top: -20px;
+            left: 0;
+            color: #FFD700;
+            font-size: 12px;
+        }
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+        }
+        .remember-forgot a {
+            color: #FFD700;
+            text-decoration: none;
+        }
+        .remember-forgot a:hover {
+            text-decoration: underline;
+        }
+        button[type="submit"] {
+            width: 100%;
+            padding: 10px 0;
+            background: #FFD700;
+            color: #000;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        button[type="submit"]:hover {
+            background: #e6c200;
+            transform: translateY(-2px);
+        }
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .register-link a {
+            color: #FFD700;
+            text-decoration: none;
+        }
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+        h2 {
+            text-align: center;
+            color: #FFD700;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+        .google-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .google-container p {
+            color: #FFD700;
+            margin: 10px 0;
+        }
+        #modeToggle {
+            position: fixed;
+            right: 20px !important;
+            transform: none !important;
+            margin-right: 0 !important;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Particles Background -->
+    <div id="particles-js"></div>
+
+    <!-- Content Wrapper -->
+    <div class="content-wrapper">
+        <div class="login-box">
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+            
+            <!-- Login Form -->
+            <form action="/login" method="POST" autocomplete="off">
+                <h2>Welcome Back</h2>
+                <div class="input-box">
+                    <input type="email" name="email" required autocomplete="off">
+                    <label>Email</label>
+                </div>
+                <div class="input-box">
+                    <input type="password" name="password" required autocomplete="off">
+                    <label>Password</label>
+                </div>
+                <div class="remember-forgot">
+                    <label style="color: #FFD700;"><input type="checkbox" style="margin-right: 5px;"> Remember me</label>
+                    <a href="#">Forgot Password?</a>
+                </div>
+                <button type="submit">Login</button>
+
+                <div class="google-container">
+                    <p>OR</p>
+                    <div id="g_id_onload"
+                        data-client_id="YOUR_GOOGLE_CLIENT_ID"
+                        data-context="signin"
+                        data-ux_mode="popup"
+                        data-callback="handleCredentialResponse"
+                        data-auto_prompt="false">
+                    </div>
+                    <div class="google-login">
+                        <div class="g_id_signin" data-type="standard"></div>
+                    </div>
+                </div>
+
+                <div class="register-link">
+                    <p style="color: #fff;">Don't have an account? <a href="/register">Register</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function handleCredentialResponse(response) {
+            console.log("Encoded JWT ID token: " + response.credential);
+        }
+
+        // Force a complete reload on page load to clear any cached state
+        if (performance.navigation.type === 1 || performance.navigation.type === 0) {
+            // This is a fresh page load or a reload
+            // Clear any form data and session storage
+            localStorage.removeItem('formData');
+            sessionStorage.clear();
+            
+            // Reset the form
+            document.addEventListener('DOMContentLoaded', function() {
+                // Reset form fields
+                const form = document.querySelector('form');
+                if (form) {
+                    form.reset();
+                    
+                    // Add extra measure to clear email and password fields
+                    const emailInput = document.querySelector('input[name="email"]');
+                    const passwordInput = document.querySelector('input[name="password"]');
+                    
+                    if (emailInput) emailInput.value = '';
+                    if (passwordInput) passwordInput.value = '';
+                }
+                
+                // Auto-hide flash messages after 5 seconds
+                const flashMessages = document.querySelectorAll('.alert');
+                flashMessages.forEach(function(message) {
+                    setTimeout(function() {
+                        message.style.opacity = '0';
+                        message.style.transition = 'opacity 1s';
+                        setTimeout(function() {
+                            message.style.display = 'none';
+                        }, 1000);
+                    }, 5000);
+                });
+            });
+        }
+        
+        // Handle back button navigation
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted) {
+                // Page is loaded from cache (back button)
+                window.location.reload();
+            }
+        });
+
+        function toggleMode() {
+            document.body.classList.toggle("light-mode");
+            
+            // Update button text
+            const button = document.querySelector(".toggle-mode");
+            if (document.body.classList.contains("light-mode")) {
+                button.textContent = "Dark Mode";
+                localStorage.setItem("mode", "light");
+            } else {
+                button.textContent = "Light Mode";
+                localStorage.setItem("mode", "dark");
+            }
+        }
+    </script>
+
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <script src="{{ url_for('static', filename='js/particles.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

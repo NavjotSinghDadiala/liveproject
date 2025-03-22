@@ -1,0 +1,240 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    padding: 20px;
+    background-color: #000000;
+    color: #ffffff;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Light Mode Styles */
+body.light-mode {
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+.light-mode .container {
+    background: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.light-mode h1, 
+.light-mode h2, 
+.light-mode h3, 
+.light-mode h4 {
+    color: #007BFF;
+}
+
+.light-mode a {
+    color: #007BFF;
+}
+
+.light-mode .company-info {
+    background: #eef;
+}
+
+.light-mode .similar-job {
+    background: #f4f4f4;
+}
+
+.light-mode .apply-btn {
+    background: #007BFF;
+}
+
+.light-mode .apply-btn:hover {
+    background: #0056b3;
+}
+
+/* Toggle Button */
+.toggle-mode {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    padding: 8px 16px;
+    background: #FFD700;
+    color: black;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.3s ease-in-out;
+    z-index: 1000;
+}
+
+.toggle-mode:hover {
+    background: #E5C100;
+    transform: scale(1.05);
+}
+
+.container {
+    background: #1a1a1a;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    max-width: 800px;
+    margin: auto;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #333;
+}
+
+nav {
+    margin-bottom: 10px;
+}
+
+h1, h2, h3, h4 {
+    color: #FFD700;
+    transition: color 0.3s ease;
+}
+
+a {
+    color: #FFD700;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #E5C100;
+    text-decoration: underline;
+}
+
+.job-meta {
+    margin: 15px 0;
+}
+
+.job-meta span {
+    display: inline-block;
+    margin-right: 15px;
+    font-weight: bold;
+    color: #aaa;
+}
+
+.apply-btn {
+    background: #FFD700;
+    color: black;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin: 15px 0;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.apply-btn:hover {
+    background: #E5C100;
+}
+
+.company-info {
+    background: #2c2c3a;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 20px 0;
+    transition: background-color 0.3s ease;
+    border: 1px solid #444;
+}
+
+.company-info button {
+    background: #333;
+    color: white;
+    border: 1px solid #555;
+    padding: 8px 15px;
+    margin-right: 10px;
+    margin-top: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.company-info button:hover {
+    background: #444;
+    border-color: #FFD700;
+    color: #FFD700;
+}
+
+.similar-job {
+    background: #2a2a2a;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    border: 1px solid #444;
+}
+
+.similar-job h4 {
+    margin-bottom: 5px;
+}
+
+.similar-job p {
+    margin: 5px 0;
+    color: #aaa;
+}
+
+.similar-job button {
+    background: #333;
+    color: white;
+    border: 1px solid #555;
+    padding: 8px 15px;
+    margin-top: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.similar-job button:hover {
+    background: #444;
+    border-color: #FFD700;
+    color: #FFD700;
+}
+
+/* Back Button Styles */
+.back-button {
+    display: inline-block;
+    margin-bottom: 20px;
+    color: #FFD700;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.back-button:hover {
+    color: #E5C100;
+    text-decoration: underline;
+}
+
+.light-mode .back-button {
+    color: #007BFF;
+}
+
+.light-mode .back-button:hover {
+    color: #0056b3;
+}
+
+/* Lists styling */
+ul {
+    padding-left: 20px;
+    margin: 15px 0;
+}
+
+li {
+    margin-bottom: 8px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+    
+    h1 {
+        font-size: 24px;
+    }
+    
+    h2 {
+        font-size: 20px;
+    }
+    
+    .job-meta span {
+        display: block;
+        margin-bottom: 5px;
+    }
+} 

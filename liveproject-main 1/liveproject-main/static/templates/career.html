@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Your Dream Job Today!</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/career.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/particles.css') }}">
+</head>
+<body>
+    <!-- Particles Background -->
+    <div id="particles-js"></div>
+    
+    <!-- Navigation -->
+    <header>
+        <nav class="main-nav">
+            <div class="logo">COMPANY LOGO</div>
+        </nav>
+    </header>
+
+     <!-- Main Content -->
+    <div class="container">
+        <header class="search-header">
+            <h1>Find Your Next Career Opportunity</h1>
+            <div class="search-bar">
+                <input type="text" id="search-input" placeholder="Job title, keywords, or location">
+                <button id="search-btn">Search</button>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <aside class="filters">
+                <h3>Filters</h3>
+                
+                <div class="filter-section">
+                    <h4>Location</h4>
+                    <select id="location-filter">
+                        <option value="">City, state, or remote</option>
+                        <option value="remote">Remote</option>
+                        <option value="newyork">New York, NY</option>
+                        <option value="sanfrancisco">San Francisco, CA</option>
+                        <option value="losangeles">Los Angeles, CA</option>
+                        <option value="seattle">Seattle, WA</option>
+                    </select>
+                </div>
+                
+                <div class="filter-section">
+                    <h4>Industry</h4>
+                    <select id="industry-filter">
+                        <option value="">Select Industry</option>
+                        <option value="tech">Technology</option>
+                        <option value="healthcare">Healthcare</option>
+                        <option value="finance">Finance</option>
+                        <option value="education">Education</option>
+                        <option value="marketing">Marketing</option>
+                    </select>
+                </div>
+                
+                <div class="filter-section">
+                    <h4>Salary Range</h4>
+                    <select id="salary-filter">
+                        <option value="">Any salary range</option>
+                        <option value="0-50000">$0 - $50,000</option>
+                        <option value="50000-75000">$50,000 - $75,000</option>
+                        <option value="75000-100000">$75,000 - $100,000</option>
+                        <option value="100000-150000">$100,000 - $150,000</option>
+                        <option value="150000-plus">$150,000+</option>
+                    </select>
+                </div>
+                
+                <div class="filter-section">
+                    <h4>Job Type</h4>
+                    <select id="job-type-filter">
+                        <option value="">Full-time, Part-time, etc.</option>
+                        <option value="fulltime">Full-time</option>
+                        <option value="parttime">Part-time</option>
+                        <option value="contract">Contract</option>
+                        <option value="freelance">Freelance</option>
+                        <option value="internship">Internship</option>
+                    </select>
+                </div>
+                
+                <div class="results-count">
+                    <span id="job-count">1,245</span> Jobs Found
+                </div>
+                
+                <div class="view-toggle">
+                    <button class="active" id="grid-view">Grid View</button>
+                    <button id="list-view">List View</button>
+                </div>
+            </aside>
+            
+            <main class="job-listings">
+                <!-- Job listings will be dynamically populated here -->
+                <div class="load-more">
+                    <button id="load-more-btn">Load More Jobs</button>
+                </div>
+            </main>
+        </div>
+    </div>
+<!-- Add this after your job cards container -->
+  <!-- Replace your current Load More button with this HTML -->
+<div class="load-more-container">
+    <button id="loadMoreJobs">
+      Load More Jobs
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+      </svg>
+    </button>
+  </div>
+  
+  <!-- Message for when no more jobs are available -->
+  <p id="noMoreJobsMsg" class="no-more-jobs-message" style="display: none;">
+    No more jobs to display
+  </p>
+    <footer>
+        <p>&copy; 2025 Company Logo. All rights reserved.</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/career.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/particles.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
