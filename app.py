@@ -4,6 +4,7 @@ from models import User, Applicants
 import re
 import sqlite3
 
+
 app = Flask(__name__, static_folder='static', template_folder='static/templates')
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
@@ -47,6 +48,8 @@ with app.app_context():
     employees = User.query.all()
     for emp in employees:
         print(f"ID: {emp.id}, Name: {emp.name}, Email: {emp.email}, Role ID: {emp.role_id}")
+    print([hired.employee_email for hired in Hired.query.all()])
+
 
 #--------------------------------------------------------------------------------------------------------------------------------
 # ROUTERS 
@@ -136,39 +139,30 @@ def register():
         username = request.form.get('username')
         email = request.form.get('email')
         password = request.form.get('password')
-        resume_url = request.form.get('resume')
-        role = request.form.get('role') 
+        role = request.form.get('role')  
 
         if not is_valid_email(email):
             flash("Invalid email format.", "danger")
             return redirect('/register')
 
+        # Check if user already exists
+        existing_user = User.query.filter_by(email=email).first()
+        existing_applicant = Applicants.query.filter_by(email=email).first()
+        
+        if existing_user or existing_applicant:
+            flash("Email already exists. Try logging in.", "danger")
+            return redirect('/register')
+
         if role == "applicant":
-            if not resume_url or not resume_url.startswith("http"):
-                flash("Invalid resume URL. Please enter a valid link.", "danger")
-                return redirect('/register')
-
-            existing_applicant = Applicants.query.filter_by(email=email).first()
-            if existing_applicant:
-                flash("Email already exists. Try logging in.", "danger")
-                return redirect('/register')
-
             new_applicant = Applicants(
                 name=username,
                 email=email,
                 password=password,
-                resume=resume_url,
                 approval=False
             )
             db.session.add(new_applicant)
-
         else:
-            role_id = 1 if role == "admin" else 2 
-            existing_user = User.query.filter_by(email=email).first()
-            if existing_user:
-                flash("Email already exists. Try logging in.", "danger")
-                return redirect('/register')
-
+            role_id = 1 if role == "admin" else 2  # Ensure this matches your role table
             new_user = User(
                 name=username,
                 email=email,
@@ -182,6 +176,7 @@ def register():
         return redirect('/login')
 
     return render_template('register.html')
+
 
 
 @app.route('/admin_dashboard')
@@ -203,7 +198,6 @@ def employee_dashboard():
     applicants = Applicants.query.all() 
     jobs = Job.query.all()
     
-    # Count hired applicants based on employee email
     hired_count = Hired.query.filter_by(employee_email=user.email).count()
 
     return render_template('employee_dashboard.html', user=user, applicants=applicants, jobs=jobs, hired_count=hired_count)
@@ -324,10 +318,15 @@ def approve_applicant(applicant_email):
 
 @app.route('/add_job', methods=['GET', 'POST'])
 def add_job():
+    if 'user_email' not in session or session['role'] != 'employee':
+        flash("Access Denied!", "danger")
+        return redirect(url_for('employee_dashboard'))
+    
     if request.method == 'POST':
         title = request.form['title']
         description = request.form['description']
-        vacancies = request.form['vacancies']  
+        vacancies = request.form['vacancies']
+        employee_email = session['user_email']  
 
         if not title or not description or not vacancies:
             flash("All fields are required!", "danger")
@@ -336,7 +335,8 @@ def add_job():
         new_job = Job(
             title=title,
             description=description,
-            vacancies=int(vacancies) 
+            vacancies=int(vacancies),
+            employee_email=employee_email
         )
 
         db.session.add(new_job)
@@ -435,10 +435,28 @@ def view_team_members():
     if 'role' not in session or session['role'] != 'employee':
         flash("Access Denied!", "danger")
         return redirect(url_for('employee_dashboard'))
-
+    
+    user = User.query.filter_by(email=session['user_email']).first()
     team_members = User.query.all()
 
-    return render_template('view_team_members.html', team_members=team_members)
+    team_stats = {}
+    for member in team_members:
+        jobs_count = Job.query.filter_by(employee_email=member.email).count()
+        hired_count = Hired.query.filter_by(employee_email=member.email).count()
+
+        team_stats[member.email] = {
+            'jobs_count': jobs_count,
+            'hired_count': hired_count
+        }
+
+        # Debugging output
+        print(f"Member: {member.email}, Jobs: {jobs_count}, Hired: {hired_count}")
+
+    return render_template('view_team_members.html', team_members=team_members, team_stats=team_stats)
+
+
+
+
 
 
 

@@ -1,11 +1,14 @@
-import sqlite3
+from sqlalchemy.sql import text
+from app import db, app  # Ensure correct import of Flask app and db
 
-conn = sqlite3.connect("instance/db.sqlite3")
-cursor = conn.cursor()
+with app.app_context():  # Ensures execution inside Flask context
+    sql_query = text("""
+        UPDATE hired 
+        SET employee_email = 'dadialanavjotsingh@gmail.com' 
+        WHERE employee_email = 'employee@example.com';
+    """)
 
-# Update all users with role_id = 2 (customer) to role_id = 3 (employee)
-cursor.execute("UPDATE user SET role_id = 3 WHERE role_id = 2;")
+    db.session.execute(sql_query)  # Execute the query
+    db.session.commit()  # Commit the changes
 
-conn.commit()
-print("All customers have been updated to employees.")
-conn.close()
+print("Hired table updated successfully!")

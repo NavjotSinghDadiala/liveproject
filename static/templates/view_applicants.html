@@ -28,7 +28,6 @@
                     <tr>
                         <th>Name</th>
                         <th>Email</th>
-                        <th>Resume</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
@@ -38,13 +37,6 @@
                     <tr>
                         <td>{{ applicant.name }}</td>
                         <td>{{ applicant.email }}</td>
-                        <td>
-                            <a href="{{ url_for('static', filename='resumes/' + applicant.resume) }}" 
-                               target="_blank" 
-                               class="resume-link">
-                                <i class="fas fa-file-alt"></i> View Resume
-                            </a>
-                        </td>
                         <td>
                             <span class="status {% if applicant.approval %}status-approved{% else %}status-pending{% endif %}">
                                 {% if applicant.approval %}Approved{% else %}Pending{% endif %}

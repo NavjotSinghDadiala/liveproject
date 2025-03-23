@@ -32,12 +32,12 @@
                     <p class="member-role">Team Member</p>
                     <div class="member-stats">
                         <div class="stat-item">
-                            <div class="stat-value">{{ member.projects|default(0) }}</div>
-                            <div class="stat-label">Projects</div>
+                            <div class="stat-value">{{ team_stats[member.email].jobs_count }}</div>
+                            <div class="stat-label">Postings</div>
                         </div>
                         <div class="stat-item">
-                            <div class="stat-value">{{ member.tasks|default(0) }}</div>
-                            <div class="stat-label">Tasks</div>
+                            <div class="stat-value">{{ team_stats[member.email].hired_count }}</div>
+                            <div class="stat-label">Hired</div>
                         </div>
                     </div>
                     <div class="member-contact">
@@ -50,6 +50,7 @@
             </div>
             {% endfor %}
         </div>
+        
 
         {% if not team_members[1::] %}
         <div class="empty-state">

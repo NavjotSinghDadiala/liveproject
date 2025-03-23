@@ -25,7 +25,6 @@ class Applicants(db.Model):
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), nullable=False, unique=True)
     password = db.Column(db.String(255), nullable=False) 
-    resume = db.Column(db.String(255), nullable=False) 
     approval = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
@@ -35,12 +34,15 @@ class Job(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=False)
-    vacancies = db.Column(db.Integer, nullable=False, default=1)  
+    vacancies = db.Column(db.Integer, nullable=False, default=1)
+    employee_email = db.Column(db.String(100), db.ForeignKey('user.email'), nullable=False) 
 
+    employee = db.relationship('User', backref='posted_jobs')
     applications = db.relationship('Application', backref='job_applications', lazy=True)  
 
     def __repr__(self):
         return f"<Job {self.title}>"
+
 
 class Application(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -54,6 +56,7 @@ class Application(db.Model):
 
     def __repr__(self):
         return f"<Application {self.id} - Applicant {self.applicant_id} - Job {self.job_id}>"
+
 
 class Hired(db.Model):
     employee_email = db.Column(db.String(120), db.ForeignKey('user.email'), primary_key=True)

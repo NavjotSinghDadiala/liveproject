@@ -110,7 +110,7 @@
 
         .login-heading {
             color: white;
-            margin-bottom: 350px;
+            margin-bottom: 390px;
             position: absolute;
         }
 
@@ -181,6 +181,68 @@
             background: rgb(255, 246, 121);
             color: rgb(22, 22, 35);
         }
+        select {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    border: none;
+    border-radius: 8px;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    appearance: none;
+    text-align: center;
+    box-shadow: 0px 4px 6px rgb(117, 88, 9);
+    
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24' fill='%23ffffff'><path d='M7 10l5 5 5-5H7z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+}
+
+select:hover {
+    background: linear-gradient(135deg, #0056b3, #003f7f);
+    transform: scale(1.05);
+}
+
+select:focus {
+    box-shadow: 0px 0px 10px rgba(0, 123, 255, 0.6);
+}
+
+select option {
+    font-size: 16px;
+    padding: 10px;
+    background: white;
+    color: #333;
+}
+.input-wrapper select {
+    margin-top: 50px; 
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    border: none;
+    border-radius: 8px;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    appearance: none;
+    text-align: center;
+    box-shadow: 0px 4px 6px rgba(238, 255, 0, 0.2);
+    
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24' fill='%23ffffff'><path d='M7 10l5 5 5-5H7z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+}
+
+
+        
     </style>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/particles.css') }}">
 </head>
@@ -198,7 +260,6 @@
                         <input type="text" name="username" placeholder="Username" required>
                         <input type="email" name="email" placeholder="Email" required>
                         <input type="password" name="password" placeholder="Password" required>
-                        <input type="url" name="resume" placeholder="Resume URL (Google Drive, LinkedIn, etc.)">
                         
                         <!-- Role Selection Dropdown -->
                         <select name="role" required>
