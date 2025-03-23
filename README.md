@@ -9,11 +9,11 @@ The **RRTTC Job Portal Website** connects job seekers with employers efficiently
 - **Prajyot Dophe (Lead):** Created wireframe
 - **Pratham:** Provided references, templates, and documentation
 - **Kunal:** Provided references, templates, and documentation
-- **Navjot Singh:** Provided references and templates, worked on employer dashboard and admin panel (Backend), worked on home page (Frontend)
+- **Navjot Singh:** Provided references and templates, created all the server router and login and register page, worked on      employer dashboard and admin panel (Backend)
 
 ### **Frontend Development Team**
-- **Aman Pal (Lead):** Worked on home page, Admin Dashboard, integrated all dashboards
-- **Navjot Singh:** Worked on home page
+- **Aman Pal (Lead):** Worked on home and login page, Admin Dashboard, integrated all dashboards
+- **Navjot Singh:** Worked on home page , register and login page(Frontend) , integrated all dashboard and routers
 - **Khushi:** Created home page, admin page
 - **Akash:** Created applicant dashboard
 - **Ananya:** Created employer dashboard, helped in wireframe, worked on user dashboard (Backend)
@@ -25,6 +25,7 @@ The **RRTTC Job Portal Website** connects job seekers with employers efficiently
 ### **Backend Development Team**
 - **Ankush Yadav (Lead):** Created user dashboard
 - **Amarnath:** Worked on user dashboard
+- **Navjot Singh:** Worked on employer dashboard and admin dashboard
 - **Rutuja:** Worked on user dashboard
 - **Supriya:** Worked on user dashboard
 - **Anjum:** Worked on employer dashboard, overall project documentation
