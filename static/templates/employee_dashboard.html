@@ -331,7 +331,6 @@
             <h2>TalentHub</h2>
             <ul>
                 <li class="active"><a href="/employee_dashboard">Home</a></li>
-                <li><a href="/career">Jobs & Career</a></li>
                 <li><a href="/view_jobs">Job Postings</a></li>
                 <li><a href="/view_applicants">Applicants</a></li>
                 <li><a href="#">Messages</a></li>
@@ -347,12 +346,16 @@
                 <div class="card">
                     <h3>Active Jobs</h3>
                     <p>{{ jobs | length}} Job Posting Available</p>
-                    <button>View All</button>
+                    <a href="/view_jobs">
+                        <button>Jobs Postings</button>
+                    </a>
+                    
+
                 </div>
                 <div class="card">
                     <h3>New Applicants</h3>
                     <p>{{ applicants | length }} New Applicants </p>
-                    <button>Review</button> 
+                    <a href="/view_applicants"><button>Review</button></a>
                 </div>
                 <div class="card">
                     <h3>Unread Messages</h3>
@@ -362,7 +365,7 @@
                 <div class="card">
                     <h3>Your Hiring</h3>
                     <p>{{hired_count}}</p>
-                    <button>See Hiring</button>
+                    <a href="/"></a><button>See Hiring</button></a>
                 </div>
             </div>
 

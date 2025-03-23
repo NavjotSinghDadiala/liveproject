@@ -256,7 +256,7 @@
       <ul class="nav flex-column">
         <li class="nav-item"><a href="/admin_dashboard" class="nav-link"><i class="fas fa-home"></i> Dashboard</a></li>
         <li class="nav-item"><a href="/view_team_members" class="nav-link"><i class="fas fa-users"></i> Employers</a></li>
-        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-building"></i>  Applicants</a></li>
+        <li class="nav-item"><a href="/view_applicants" class="nav-link"><i class="fas fa-building"></i>  Applicants</a></li>
         <li class="nav-item"><a href="/view_jobs" class="nav-link"><i class="fas fa-briefcase"></i> Jobs</a></li>
         <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-chart-bar"></i> Reports</a></li>
         <hr>
@@ -304,38 +304,45 @@
           </div>
       </div>
 
-      <h4 class="mt-4 text-warning">User Activity Trends</h4>
-      <div class="card p-4">
-        <ul class="nav nav-tabs" id="activityTabs">
-          <li class="nav-item">
-            <a class="nav-link active" data-bs-toggle="tab" href="#daily">Daily</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="tab" href="#weekly">Weekly</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="tab" href="#monthly">Monthly</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="tab" href="#quarterly">Quarterly</a>
-          </li>
-        </ul>
+      <h4 class="text-warning mt-4">Analysis</h4>
+<div class="card p-4" style="max-width: 400px; margin: auto;"> 
+    <canvas id="applicantEmployeeChart" style="width: 100%; height: 300px;"></canvas>
+</div>
 
-        <div class="tab-content mt-3" style="max-height: 300px; overflow-y: auto;">
-          <div id="daily" class="tab-pane fade show active">
-            <p>Daily traffic chart would appear here.</p>
-          </div>
-          <div id="weekly" class="tab-pane fade">
-            <p>Weekly traffic chart would appear here.</p>
-          </div>
-          <div id="monthly" class="tab-pane fade">
-            <p>Monthly traffic chart would appear here.</p>
-          </div>
-          <div id="quarterly" class="tab-pane fade">
-            <p>Quarterly traffic chart would appear here.</p>
-          </div>
-        </div>
-      </div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    fetch("{{ url_for('get_chart_data') }}")
+        .then(response => response.json())
+        .then(data => {
+            const ctx = document.getElementById('applicantEmployeeChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: "Applicants vs Employees",
+                        data: data.data,
+                        backgroundColor: ["blue", "green"],
+                        borderColor: "#fff",
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        });
+});
+</script>
+
+
+
+
       <h4 class="text-warning mt-4">Top Employers</h4>
       <table class="table table-dark table-hover">
         <thead>

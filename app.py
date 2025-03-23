@@ -1,4 +1,7 @@
-from flask import Flask, render_template, request, flash, session, redirect, url_for
+from flask import Flask, render_template, request, flash, session, redirect, url_for , jsonify
+import io
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 from models import *  
 from models import User, Applicants 
 import re
@@ -57,22 +60,6 @@ with app.app_context():
 @app.route('/')
 def home():
     return render_template('index.html')
-
-@app.route('/career')
-def career():
-    if 'user_email' not in session:
-        flash('Please log in to view job listings!', 'danger')
-        return redirect(url_for('login'))
-
-    user = User.query.filter_by(email=session['user_email']).first()
-
-    if session['role'] != 'applicant':
-        flash("Only applicants can view job listings!", "danger")
-        return redirect(url_for('employee_dashboard'))
-
-    jobs = Job.query.all()
-    return render_template('career.html', user=user, jobs=jobs)
-
 
 
 @app.route('/login', methods=["GET", "POST"])
@@ -145,7 +132,6 @@ def register():
             flash("Invalid email format.", "danger")
             return redirect('/register')
 
-        # Check if user already exists
         existing_user = User.query.filter_by(email=email).first()
         existing_applicant = Applicants.query.filter_by(email=email).first()
         
@@ -162,7 +148,7 @@ def register():
             )
             db.session.add(new_applicant)
         else:
-            role_id = 1 if role == "admin" else 2  # Ensure this matches your role table
+            role_id = 1 if role == "admin" else 2  
             new_user = User(
                 name=username,
                 email=email,
@@ -177,7 +163,7 @@ def register():
 
     return render_template('register.html')
 
-
+# DASHBOARDS -----------------------------------------------------------------------------------------------------------------
 
 @app.route('/admin_dashboard')
 def admin_dashboard():
@@ -194,6 +180,15 @@ def admin_dashboard():
 
     return render_template('admin_dashboard.html', user=user, applicants=applicants, jobs=jobs, hired_count=hired_count)
 
+@app.route('/chart.png')
+def get_chart_data():
+    applicants_count = Applicants.query.count()  
+    employees_count = User.query.filter_by(role_id=2).count()  
+
+    return jsonify({
+        "labels": ["Applicants", "Employees"],
+        "data": [applicants_count, employees_count]
+    })
 
 
 @app.route('/employee_dashboard')
@@ -226,6 +221,8 @@ def profile_dashboard():
 
     return render_template('profile_dashboard.html', user=user, jobs=jobs)
 
+#-----------------------------------------------------------------------------------------------------------------------------------
+
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
 def edit_profile():
@@ -247,7 +244,7 @@ def edit_profile():
             return redirect(url_for('edit_profile'))
 
         user.name = name
-        user.password = password  # No hashing as per your preference
+        user.password = password
 
         db.session.commit()
         flash("Profile updated successfully!", "success")
@@ -303,26 +300,35 @@ def approve_applicant(applicant_email):
         flash("Employee role not found. Please contact admin.", "danger")
         return redirect(url_for('employee_dashboard'))
 
-    # Move applicant to employees
     new_employee = User(
         name=applicant.name,
         email=applicant.email,
         password=applicant.password,  
-        role_id=employee_role.id  # Ensure this matches your User model
+        role_id=employee_role.id
     )
 
     db.session.add(new_employee)
 
-    # Track the hiring event
     hired_entry = Hired(employee_email=employee.email, applicant_email=applicant.email)
     db.session.add(hired_entry)
-
-    # Remove applicant from the applicants table
     db.session.delete(applicant)
-
     db.session.commit()
     flash(f"{applicant.email} is now an employee!", "success")
     return redirect(url_for('employee_dashboard'))
+@app.route('/career')
+def career():
+    if 'user_email' not in session:
+        flash('Please log in to view job listings!', 'danger')
+        return redirect(url_for('login'))
+
+    user = User.query.filter_by(email=session['user_email']).first()
+
+    if session['role'] != 'applicant':
+        flash("Only applicants can view job listings!", "danger")
+        return redirect(url_for('employee_dashboard'))
+
+    jobs = Job.query.all()
+    return render_template('career.html', user=user, jobs=jobs)
 
 @app.route('/reject_applicant/<applicant_email>', methods=['POST'])
 def reject_applicant(applicant_email):
@@ -340,10 +346,6 @@ def reject_applicant(applicant_email):
 
     flash(f"Applicant {applicant.email} has been rejected!", "warning")
     return redirect(url_for('employee_dashboard'))
-
-
-
-
 
 
 @app.route('/add_job', methods=['GET', 'POST'])
@@ -406,7 +408,10 @@ def view_applications():
         .join(Applicants, Application.applicant_id == Applicants.id)\
         .join(Job, Application.job_id == Job.id).all()
 
-    return render_template('view_applications.html', job_applications=job_applications)
+    application_history = ApplicationHistory.query.order_by(ApplicationHistory.updated_on.desc()).all()
+
+    return render_template('view_applications.html', job_applications=job_applications, application_history=application_history)
+
 
 
 @app.route('/update_application/<int:app_id>', methods=['POST'])
@@ -421,11 +426,19 @@ def update_application(app_id):
         return redirect(url_for('view_applications'))
 
     status = request.form.get('status') 
-
     applicant = Applicants.query.get(application.applicant_id)
     if not applicant:
         flash("Applicant not found!", "danger")
         return redirect(url_for('view_applications'))
+
+    history_entry = ApplicationHistory(
+        application_id=application.id,
+        applicant_id=application.applicant_id,
+        job_id=application.job_id,
+        status=application.status, 
+        updated_by=session['user_email'] 
+    )
+    db.session.add(history_entry)
 
     if status == "Approved":
         employee_role = Role.query.filter_by(name='employee').first()
@@ -455,6 +468,7 @@ def update_application(app_id):
     db.session.commit()
 
     return redirect(url_for('view_applications'))
+
 
 
 

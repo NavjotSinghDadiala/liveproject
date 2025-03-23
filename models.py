@@ -56,6 +56,23 @@ class Application(db.Model):
 
     def __repr__(self):
         return f"<Application {self.id} - Applicant {self.applicant_id} - Job {self.job_id}>"
+    
+class ApplicationHistory(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    application_id = db.Column(db.Integer, db.ForeignKey('application.id'), nullable=False)
+    applicant_id = db.Column(db.Integer, db.ForeignKey('applicants.id'), nullable=False)
+    job_id = db.Column(db.Integer, db.ForeignKey('job.id'), nullable=False)
+    status = db.Column(db.String(50), nullable=False)  
+    updated_by = db.Column(db.String(100), nullable=False) 
+    updated_on = db.Column(db.DateTime, default=datetime.utcnow)
+
+    application = db.relationship('Application', backref='history_entries')
+    applicant = db.relationship('Applicants', backref='history_records')
+    job = db.relationship('Job', backref='history_records')
+
+    def __repr__(self):
+        return f"<History {self.id} - App {self.application_id} - {self.status}>"
+
 
 
 class Hired(db.Model):

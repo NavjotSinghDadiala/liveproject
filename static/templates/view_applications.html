@@ -1,5 +1,3 @@
-<!--TEMPLATE NOT IN USE -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,6 +34,30 @@
                         <button type="submit" class="bg-blue-500 text-white px-3 py-1 rounded">Update</button>
                     </form>
                 </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Application History</h2>
+    <table class="w-full text-left border-collapse border border-gray-300">
+        <thead>
+            <tr class="bg-gray-200">
+                <th class="py-2 px-4 border">Applicant</th>
+                <th class="py-2 px-4 border">Job Title</th>
+                <th class="py-2 px-4 border">Previous Status</th>
+                <th class="py-2 px-4 border">Updated By</th>
+                <th class="py-2 px-4 border">Updated On</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for history in application_history %}
+            <tr class="border">
+                <td class="py-2 px-4 border">{{ history.applicant.name }}</td>
+                <td class="py-2 px-4 border">{{ history.job.title }}</td>
+                <td class="py-2 px-4 border">{{ history.status }}</td>
+                <td class="py-2 px-4 border">{{ history.updated_by }}</td>
+                <td class="py-2 px-4 border">{{ history.updated_on.strftime('%Y-%m-%d %H:%M') }}</td>
             </tr>
             {% endfor %}
         </tbody>
