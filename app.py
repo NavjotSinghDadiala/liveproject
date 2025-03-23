@@ -181,15 +181,25 @@ def register():
 
 @app.route('/admin_dashboard')
 def admin_dashboard():
-    if 'user_email' not in session or session['role'] == 'admin':
+    print("Session Data in Admin Dashboard:", session) 
     
-        user = User.query.all()
-        applicants=Applicants.query.all()
-        jobs=Job.query.all()
-        return render_template('admin_dashboard.html', user=user , applicants=applicants , jobs=jobs)
+    if 'user_email' not in session or session.get('role') != 'admin':
+        flash("Access Denied!", "danger")
+        return redirect(url_for('login'))
+
+    user = User.query.all()
+    applicants = Applicants.query.all()
+    jobs = Job.query.all()
+    hired_count = Hired.query.all()
+
+    return render_template('admin_dashboard.html', user=user, applicants=applicants, jobs=jobs, hired_count=hired_count)
+
+
 
 @app.route('/employee_dashboard')
 def employee_dashboard():
+    print("Session Data in Employee Dashboard:", session) 
+    
     if 'user_email' not in session:
         flash('Please log in first!', 'danger')
         return redirect(url_for('login'))
@@ -201,6 +211,7 @@ def employee_dashboard():
     hired_count = Hired.query.filter_by(employee_email=user.email).count()
 
     return render_template('employee_dashboard.html', user=user, applicants=applicants, jobs=jobs, hired_count=hired_count)
+
 
 
 @app.route('/profile_dashboard')
@@ -297,8 +308,9 @@ def approve_applicant(applicant_email):
         name=applicant.name,
         email=applicant.email,
         password=applicant.password,  
-        role_name=employee_role.name  # Using role name instead of ID
+        role_id=employee_role.id  # Ensure this matches your User model
     )
+
     db.session.add(new_employee)
 
     # Track the hiring event
@@ -311,6 +323,24 @@ def approve_applicant(applicant_email):
     db.session.commit()
     flash(f"{applicant.email} is now an employee!", "success")
     return redirect(url_for('employee_dashboard'))
+
+@app.route('/reject_applicant/<applicant_email>', methods=['POST'])
+def reject_applicant(applicant_email):
+    if 'role' not in session or session['role'] != 'employee':
+        flash("Access Denied!", "danger")
+        return redirect(url_for('employee_dashboard'))
+
+    applicant = Applicants.query.filter_by(email=applicant_email).first()
+    if not applicant:
+        flash("Applicant not found.", "danger")
+        return redirect(url_for('employee_dashboard'))
+
+    db.session.delete(applicant)
+    db.session.commit()
+
+    flash(f"Applicant {applicant.email} has been rejected!", "warning")
+    return redirect(url_for('employee_dashboard'))
+
 
 
 
@@ -391,15 +421,41 @@ def update_application(app_id):
         return redirect(url_for('view_applications'))
 
     status = request.form.get('status') 
-    if status not in ["Approved", "Rejected"]:
-        flash("Invalid status!", "danger")
+
+    applicant = Applicants.query.get(application.applicant_id)
+    if not applicant:
+        flash("Applicant not found!", "danger")
         return redirect(url_for('view_applications'))
+
+    if status == "Approved":
+        employee_role = Role.query.filter_by(name='employee').first()
+        if not employee_role:
+            flash("Employee role not found. Please contact admin.", "danger")
+            return redirect(url_for('view_applications'))
+
+        new_employee = User(
+            name=applicant.name,
+            email=applicant.email,
+            password=applicant.password, 
+            role_id=employee_role.id
+        )
+        db.session.add(new_employee)
+
+        hired_entry = Hired(employee_email=session['user_email'], applicant_email=applicant.email)
+        db.session.add(hired_entry)
+
+        db.session.delete(applicant)
+
+        flash(f"{applicant.name} has been approved and is now an employee!", "success")
+
+    elif status == "Rejected":
+        flash(f"{applicant.name}'s application has been rejected.", "danger")
 
     application.status = status
     db.session.commit()
 
-    flash(f"Application {status}!", "success")
     return redirect(url_for('view_applications'))
+
 
 
 @app.route('/my_jobs')
@@ -413,7 +469,7 @@ def my_jobs():
 
 @app.route('/view_jobs')
 def view_jobs():
-    if 'role' not in session or session['role'] != 'employee':
+    if 'role' not in session or session['role'] not in ['employee', 'admin']:
         flash("Access Denied!", "danger")
         return redirect(url_for('employee_dashboard'))
 
@@ -422,7 +478,7 @@ def view_jobs():
 
 @app.route('/view_applicants')
 def view_applicants():
-    if 'role' not in session or session['role'] != 'employee':
+    if 'role' not in session or session['role'] not in ['employee', 'admin']:
         flash("Access Denied!", "danger")
         return redirect(url_for('employee_dashboard'))
 
@@ -432,10 +488,10 @@ def view_applicants():
 
 @app.route('/view_team_members')
 def view_team_members():
-    if 'role' not in session or session['role'] != 'employee':
+    if 'role' not in session or session['role'] not in ['employee', 'admin']:
         flash("Access Denied!", "danger")
         return redirect(url_for('employee_dashboard'))
-    
+
     user = User.query.filter_by(email=session['user_email']).first()
     team_members = User.query.all()
 
@@ -449,10 +505,8 @@ def view_team_members():
             'hired_count': hired_count
         }
 
-        # Debugging output
-        print(f"Member: {member.email}, Jobs: {jobs_count}, Hired: {hired_count}")
-
     return render_template('view_team_members.html', team_members=team_members, team_stats=team_stats)
+
 
 
 

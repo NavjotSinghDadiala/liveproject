@@ -255,9 +255,9 @@
       </div>
       <ul class="nav flex-column">
         <li class="nav-item"><a href="/admin_dashboard" class="nav-link"><i class="fas fa-home"></i> Dashboard</a></li>
-        <li class="nav-item"><a href="/view_team_members" class="nav-link"><i class="fas fa-users"></i> Users</a></li>
+        <li class="nav-item"><a href="/view_team_members" class="nav-link"><i class="fas fa-users"></i> Employers</a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-building"></i>  Applicants</a></li>
         <li class="nav-item"><a href="/view_jobs" class="nav-link"><i class="fas fa-briefcase"></i> Jobs</a></li>
-        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-building"></i> Employers</a></li>
         <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-chart-bar"></i> Reports</a></li>
         <hr>
         <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-cog"></i> Settings</a></li>
@@ -297,9 +297,9 @@
         <div class="col-md-3">
             <div class="card p-3 text-center">
               <i class="fas fa-user-tie text text-danger fa-2x"></i>
-              <h5>None</h5>
+              <h5>{{hired_count | length}}</h5>
               <p>Total Hiring</p>
-              <button class="btn btn-primary">View Jobs</button>
+              <button class="btn btn-primary">Jobs Analytics</button>
             </div>
           </div>
       </div>

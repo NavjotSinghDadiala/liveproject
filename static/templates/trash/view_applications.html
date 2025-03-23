@@ -9,34 +9,38 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <table class="w-full text-left">
+    <h2>Job Applications</h2>
+    
+    <table class="w-full text-left border-collapse border border-gray-300">
         <thead>
-            <tr>
-                <th class="py-2">Applicant</th>
-                <th class="py-2">Job Title</th>
-                <th class="py-2">Status</th>
-                <th class="py-2">Actions</th>
+            <tr class="bg-gray-200">
+                <th class="py-2 px-4 border">Applicant</th>
+                <th class="py-2 px-4 border">Job Title</th>
+                <th class="py-2 px-4 border">Status</th>
+                <th class="py-2 px-4 border">Actions</th>
             </tr>
         </thead>
         <tbody>
             {% for application, applicant, job in job_applications %}
-            <tr>
-                <td class="py-2">{{ applicant.name }}</td>
-                <td class="py-2">{{ job.title }}</td>
-                <td class="py-2">{{ application.status }}</td>
-                <td class="py-2">
-                    <form action="{{ url_for('update_application', app_id=application.id, status='Approved') }}" method="post">
-                        <button type="submit" class="bg-green-500 text-white px-2 py-1 rounded">Approve</button>
-                    </form>
-                    <form action="{{ url_for('update_application', app_id=application.id, status='Rejected') }}" method="post">
-                        <button type="submit" class="bg-red-500 text-white px-2 py-1 rounded">Reject</button>
+            <tr class="border">
+                <td class="py-2 px-4 border">{{ applicant.name }}</td>
+                <td class="py-2 px-4 border">{{ job.title }}</td>
+                <td class="py-2 px-4 border">{{ application.status }}</td>
+                <td class="py-2 px-4 border">
+                    <form action="{{ url_for('update_application', app_id=application.id) }}" method="post">
+                        <select name="status" class="px-2 py-1 border rounded">
+                            <option value="Pending" {% if application.status == 'Pending' %}selected{% endif %}>Pending</option>
+                            <option value="Approved" {% if application.status == 'Approved' %}selected{% endif %}>Approve</option>
+                            <option value="Rejected" {% if application.status == 'Rejected' %}selected{% endif %}>Reject</option>
+                        </select>
+                        <button type="submit" class="bg-blue-500 text-white px-3 py-1 rounded">Update</button>
                     </form>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-    
-    <a href="{{ url_for('employee_dashboard') }}">Back to Dashboard</a>
+
+    <a href="{{ url_for('employee_dashboard') }}" class="block mt-4 text-blue-600">Back to Dashboard</a>
 </body>
 </html>
