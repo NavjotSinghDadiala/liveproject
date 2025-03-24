@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import LargeBinary
 from flask_login import UserMixin
 from datetime import datetime
 
@@ -13,6 +14,8 @@ class User(db.Model, UserMixin):
     flag = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+    resume = db.Column(LargeBinary, nullable=True) 
+
     role = db.relationship('Role', backref=db.backref('users', lazy=True))  
 
 class Role(db.Model):
@@ -25,7 +28,12 @@ class Applicants(db.Model):
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), nullable=False, unique=True)
     password = db.Column(db.String(255), nullable=False) 
+    resume = db.Column(db.String(255), nullable=False , default= "No resume uploaded")  
     approval = db.Column(db.Boolean, default=False)
+    experience = db.Column(db.String(100), nullable=True , default= "No experience")
+    degree = db.Column(db.String(100), nullable=True , default= "No degree")
+    skills = db.Column(db.String(500), nullable=True , default= "No skills")
+    portfolio = db.Column(db.String(100), nullable=True , default= "No portfolio")
 
     def __repr__(self):
         return f"<Applicant {self.id} - {self.name}>" 
@@ -43,7 +51,6 @@ class Job(db.Model):
     def __repr__(self):
         return f"<Job {self.title}>"
 
-
 class Application(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     applicant_id = db.Column(db.Integer, db.ForeignKey('applicants.id'), nullable=False)
@@ -56,7 +63,7 @@ class Application(db.Model):
 
     def __repr__(self):
         return f"<Application {self.id} - Applicant {self.applicant_id} - Job {self.job_id}>"
-    
+
 class ApplicationHistory(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     application_id = db.Column(db.Integer, db.ForeignKey('application.id'), nullable=False)
@@ -72,7 +79,6 @@ class ApplicationHistory(db.Model):
 
     def __repr__(self):
         return f"<History {self.id} - App {self.application_id} - {self.status}>"
-
 
 
 class Hired(db.Model):

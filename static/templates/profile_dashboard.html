@@ -75,20 +75,21 @@ profile_dashboard.html
                         </div>
                     </div>
                     <p class="text-gray-400 mb-4">Add missing information to your profile</p>
-                    <button class="bg-yellow-500 text-black py-2 px-4 rounded">Complete Profile</button>
+                    <a href="#completion">
+                        <button class="bg-yellow-500 text-black py-2 px-4 rounded">Complete Profile</button>
+                    </a>
                 </div>
-                <div class="bg-gray-800 p-4 rounded-lg shadow">
-                    <div class="flex items-center mb-2">
-                        <div class="bg-gray-600 rounded-full h-10 w-10"></div>
-                        <div class="ml-4">
-                            <h2 class="text-lg font-semibold">RESUME</h2>
-                            <p class="text-gray-400">2 Versions</p>
-                        </div>
-                    </div>
-                    <p class="text-gray-400 mb-4">Last updated 3 days ago</p>
-                    <button class="bg-yellow-500 text-black py-2 px-4 rounded mr-2">Upload New</button>
-                    <button class="bg-gray-600 text-white py-2 px-4 rounded">View All</button>
+                <div class="bg-gray-800 p-6 rounded-lg shadow mb-6">
+                    <h2 class="text-xl font-semibold mb-4">Resume Management</h2>
+                    <!-- Display uploaded resumes (if any) -->
+                    
+                
+                    <!-- Button to Upload New Resume -->
+                    <a href="{{ url_for('upload_resume') }}">
+                        <button class="bg-yellow-500 text-black py-2 px-4 rounded">Upload New Resume</button>
+                    </a>
                 </div>
+                
                 <div class="bg-gray-800 p-4 rounded-lg shadow">
                     <div class="flex items-center mb-2">
                         <div class="bg-gray-600 rounded-full h-10 w-10"></div>
@@ -98,19 +99,20 @@ profile_dashboard.html
                         </div>
                     </div>
                     <p class="text-gray-400 mb-4">4 new responses from employers</p>
-                    <button onclick="toggleApplications()" class="bg-yellow-500 text-black py-2 px-4 rounded">View Applications</button>
+                    <button onclick="window.location.href='#'" class="bg-yellow-500 text-black py-2 px-4 rounded">View Applications</button>
+
                 </div>
                 <div class="bg-gray-800 p-4 rounded-lg shadow">
                     <div class="flex items-center mb-2">
                         <div class="bg-gray-600 rounded-full h-10 w-10"></div>
                         <div class="ml-4">
                             <h2 class="text-lg font-semibold">JOB ALERTS</h2>
-                            <p class="text-gray-400">{{ job_alerts|length }} Alerts</p>
+                            <p class="text-gray-400">{{ jobs|length }} Alerts</p>
                         </div>
                     </div>
                     <p class="text-gray-400 mb-4">8 new jobs match your preferences</p>
                     <button onclick="toggleJobAlerts()" class="bg-yellow-500 text-black py-2 px-4 rounded mr-2">View Jobs</button>
-                    <button class="bg-gray-600 text-white py-2 px-4 rounded">Settings</button>
+                    
                 </div>
             </div>
 
@@ -159,109 +161,33 @@ profile_dashboard.html
             </div>
             
 
-            <div class="bg-gray-800 p-6 rounded-lg shadow mb-6">
+            <div id="completion"class="bg-gray-800 p-6 rounded-lg shadow mb-6">
                 <h2 class="text-xl font-semibold mb-4">Profile Completion</h2>
                 <ul class="space-y-4">
                     <li class="flex justify-between items-center">
                         <span>Personal Information</span>
-                        <button class="text-yellow-500 hover:underline">edit</button>
+                        <a href="{{ url_for('edit_profile', field='name') }}" class="text-yellow-500 hover:underline">edit</a>
                     </li>
                     <li class="flex justify-between items-center">
                         <span>Work Experience</span>
-                        <button class="text-yellow-500 hover:underline">edit</button>
+                        <a href="{{ url_for('edit_profile', field='experience') }}" class="text-yellow-500 hover:underline">edit</a>
                     </li>
                     <li class="flex justify-between items-center">
                         <span>Education</span>
-                        <button class="text-yellow-500 hover:underline">edit</button>
+                        <a href="{{ url_for('edit_profile', field='degree') }}" class="text-yellow-500 hover:underline">edit</a>
                     </li>
                     <li class="flex justify-between items-center">
                         <span>Skills</span>
-                        <button class="text-yellow-500 hover:underline">edit</button>
+                        <a href="{{ url_for('edit_profile', field='skills') }}" class="text-yellow-500 hover:underline">edit</a>
                     </li>
                     <li class="flex justify-between items-center">
                         <span>Portfolio</span>
-                        <button class="text-yellow-500 hover:underline">edit</button>
+                        <a href="{{ url_for('edit_profile', field='portfolio') }}" class="text-yellow-500 hover:underline">edit</a>
                     </li>
                 </ul>
             </div>
-
-            <div class="bg-gray-800 p-6 rounded-lg shadow mb-6">
-                <h2 class="text-xl font-semibold mb-4">Resume Management</h2>
-                <table class="w-full text-left mb-4">
-                    <thead>
-                        <tr>
-                            <th class="py-2">Resume Name</th>
-                            <th class="py-2">Last Updated</th>
-                            <th class="py-2">Format</th>
-                            <th class="py-2">Status</th>
-                            <th class="py-2"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="py-2">Software_Developer_Resume.pdf</td>
-                            <td class="py-2">3 days ago</td>
-                            <td class="py-2">PDF</td>
-                            <td class="py-2">Active</td>
-                            <td class="py-2"><button class="text-yellow-500 hover:underline">edit</button></td>
-                        </tr>
-                        <tr>
-                            <td class="py-2">UX_Designer_Resume.docx</td>
-                            <td class="py-2">1 week ago</td>
-                            <td class="py-2">DOCX</td>
-                            <td class="py-2">Active</td>
-                            <td class="py-2"><button class="text-yellow-500 hover:underline">edit</button></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <button class="bg-yellow-500 text-black py-2 px-4 rounded">Upload New Resume</button>
-            </div>
-
-            <div class="bg-gray-800 p-6 rounded-lg shadow mb-6">
-                <h2 class="text-xl font-semibold mb-4">Application Tracking</h2>
-                <div class="flex space-x-4 mb-4">
-                    <button class="text-yellow-500 hover:underline">All Applications</button>
-                    <button class="text-gray-400 hover:underline">In Progress</button>
-                    <button class="text-gray-400 hover:underline">Interviews</button>
-                    <button class="text-gray-400 hover:underline">Offers</button>
-                    <button class="text-gray-400 hover:underline">Rejected</button>
-                </div>
-                <table class="w-full text-left mb-4">
-                    <thead>
-                        <tr>
-                            <th class="py-2">Job Title</th>
-                            <th class="py-2">Company</th>
-                            <th class="py-2">Applied Date</th>
-                            <th class="py-2">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="py-2">Senior UX Designer</td>
-                            <td class="py-2">TechCorp Inc.</td>
-                            <td class="py-2">Today</td>
-                            <td class="py-2">Applied</td>
-                        </tr>
-                        <tr>
-                            <td class="py-2">Frontend Developer</td>
-                            <td class="py-2">Global Solutions</td>
-                            <td class="py-2">2 days ago</td>
-                            <td class="py-2">In Review</td>
-                        </tr>
-                        <tr>
-                            <td class="py-2">Product Manager</td>
-                            <td class="py-2">Innovate Labs</td>
-                            <td class="py-2">1 week ago</td>
-                            <td class="py-2">Interview Scheduled</td>
-                        </tr>
-                        <tr>
-                            <td class="py-2">Data Analyst</td>
-                            <td class="py-2">Future Systems</td>
-                            <td class="py-2">2 weeks ago</td>
-                            <td class="py-2">Rejected</td>
-                        </tr>
-                    </tbody>
-                </table>
+        
+            
                 <button class="bg-yellow-500 text-black py-2 px-4 rounded">View All Applications</button>
             </div>
 
@@ -294,6 +220,7 @@ profile_dashboard.html
             </div>
         </div>
     </div>
+    <a href="{{ url_for('logout') }}" class="text-blue-500 hover:underline">Logout</a>
 
     <!-- Scripts -->
     <script>

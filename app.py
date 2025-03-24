@@ -1,11 +1,13 @@
-from flask import Flask, render_template, request, flash, session, redirect, url_for , jsonify
-import io
+from flask import Flask, render_template, request, flash, session, redirect, url_for , jsonify 
+import io , os
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from models import *  
 from models import User, Applicants 
 import re
 import sqlite3
+from flask import send_from_directory
+from werkzeug.utils import secure_filename
 
 
 app = Flask(__name__, static_folder='static', template_folder='static/templates')
@@ -215,17 +217,65 @@ def profile_dashboard():
         flash('Access Denied!', 'danger')
         return redirect(url_for('login'))
 
-    user = Applicants.query.filter_by(email=session['user_email']).first()
-    
-    jobs=Job.query.all()
+    applicant = Applicants.query.filter_by(email=session['user_email']).first()
 
-    return render_template('profile_dashboard.html', user=user, jobs=jobs)
+    if not applicant:
+        flash('Applicant not found!', 'danger')
+        return redirect(url_for('login'))
+
+    jobs = Job.query.all()
+
+    return render_template('profile_dashboard.html', user=applicant, jobs=jobs)
+#------------------------------------------------------------------------------------------------------------------------------------
+
+UPLOAD_FOLDER = 'static/uploads'
+ALLOWED_EXTENSIONS = {'pdf', 'doc', 'docx'}
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER       
+def allowed_file(filename):
+    """Check if the file is allowed by extension."""
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 #-----------------------------------------------------------------------------------------------------------------------------------
 
+@app.route('/resume/<resume_filename>')
+def view_resume(resume_filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], resume_filename)
 
-@app.route('/edit_profile', methods=['GET', 'POST'])
-def edit_profile():
+@app.route('/upload_resume', methods=["GET", "POST"])       #ERROR
+def upload_resume():
+    if 'user_email' not in session or session['role'] != 'applicant':
+        flash('Access Denied! Please log in as an applicant.', 'danger')
+        return redirect(url_for('login'))
+
+    applicant = Applicants.query.filter_by(email=session['user_email']).first()
+
+    if not applicant:
+        flash('Applicant not found!', 'danger')
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        resume = request.files.get('resume')
+
+        if not resume or not allowed_file(resume.filename):
+            flash("Invalid resume format. Please upload a PDF, DOC, or DOCX file.", "danger")
+            return redirect('/upload_resume')
+
+        resume_filename = secure_filename(resume.filename)
+        resume_path = os.path.join(app.config['UPLOAD_FOLDER'], resume_filename)
+        resume.save(resume_path)
+
+        applicant.resume = resume_filename
+        db.session.commit()
+
+        flash("Resume uploaded successfully!", "success")
+        return redirect(url_for('profile_dashboard'))
+
+    return render_template('upload_resume.html')
+
+
+@app.route('/edit_profile/<field>', methods=['GET', 'POST'])
+def edit_profile(field):
     if 'user_email' not in session:
         flash('Please log in first!', 'danger')
         return redirect(url_for('login'))
@@ -235,22 +285,25 @@ def edit_profile():
     else:
         user = User.query.filter_by(email=session['user_email']).first()
 
+    if not user:
+        flash('User not found!', 'danger')
+        return redirect(url_for('login'))
+
     if request.method == 'POST':
-        name = request.form.get('name')
-        password = request.form.get('password')
+        new_value = request.form.get('value')
 
-        if not name or not password:
-            flash("All fields are required!", "danger")
-            return redirect(url_for('edit_profile'))
+        if not new_value:
+            flash(f"The {field} field cannot be empty!", 'danger')
+            return redirect(url_for('edit_profile', field=field))
 
-        user.name = name
-        user.password = password
-
+        setattr(user, field, new_value)
+        
         db.session.commit()
-        flash("Profile updated successfully!", "success")
+        flash(f"Your {field} has been updated!", 'success')
         return redirect(url_for('profile_dashboard'))
 
-    return render_template('edit_profile.html', user=user)
+    return render_template('edit_profile.html', user=user, field=field)
+
 
 
 @app.route('/applicants')
@@ -386,12 +439,16 @@ def apply_job(job_id):
 
     applicant = Applicants.query.filter_by(email=session['user_email']).first()
 
+    if not applicant:
+        flash("Applicant profile not found!", "danger")
+        return redirect(url_for('career'))
+
     existing_application = Application.query.filter_by(applicant_id=applicant.id, job_id=job_id).first()
     if existing_application:
         flash("You have already applied for this job!", "warning")
         return redirect(url_for('career'))
 
-    new_application = Application(applicant_id=applicant.id, job_id=job_id)
+    new_application = Application(applicant_id=applicant.id, job_id=job_id, status="Pending Review")
     db.session.add(new_application)
     db.session.commit()
 
@@ -406,11 +463,14 @@ def view_applications():
 
     job_applications = db.session.query(Application, Applicants, Job)\
         .join(Applicants, Application.applicant_id == Applicants.id)\
-        .join(Job, Application.job_id == Job.id).all()
+        .join(Job, Application.job_id == Job.id)\
+        .filter(Application.status == "Pending Review")\
+        .all()
 
     application_history = ApplicationHistory.query.order_by(ApplicationHistory.updated_on.desc()).all()
 
     return render_template('view_applications.html', job_applications=job_applications, application_history=application_history)
+
 
 
 
@@ -425,7 +485,7 @@ def update_application(app_id):
         flash("Application not found!", "danger")
         return redirect(url_for('view_applications'))
 
-    status = request.form.get('status') 
+    status = request.form.get('status')  # "Approved" or "Rejected"
     applicant = Applicants.query.get(application.applicant_id)
     if not applicant:
         flash("Applicant not found!", "danger")
@@ -435,7 +495,7 @@ def update_application(app_id):
         application_id=application.id,
         applicant_id=application.applicant_id,
         job_id=application.job_id,
-        status=application.status, 
+        status=status,
         updated_by=session['user_email'] 
     )
     db.session.add(history_entry)
@@ -468,6 +528,7 @@ def update_application(app_id):
     db.session.commit()
 
     return redirect(url_for('view_applications'))
+
 
 
 

@@ -1,14 +1,30 @@
 from sqlalchemy.sql import text
-from app import db, app  # Ensure correct import of Flask app and db
+from app import db, app  
 
 with app.app_context():  # Ensures execution inside Flask context
-    sql_query = text("""
-        UPDATE hired 
-        SET employee_email = 'dadialanavjotsingh@gmail.com' 
-        WHERE employee_email = 'employee@example.com';
-    """)
+    sql_queries = [
+    text("ALTER TABLE applicants ADD COLUMN linkedin TEXT;"),
+    text("ALTER TABLE applicants ADD COLUMN github_profile TEXT;"),
+    text("ALTER TABLE applicants ADD COLUMN projects TEXT;"),
 
-    db.session.execute(sql_query)  # Execute the query
-    db.session.commit()  # Commit the changes
+    text("ALTER TABLE user ADD COLUMN phone_number TEXT;"),
+    text("ALTER TABLE user ADD COLUMN address TEXT;"),
 
-print("Hired table updated successfully!")
+    text("ALTER TABLE job ADD COLUMN salary INTEGER;"),
+    text("ALTER TABLE job ADD COLUMN job_type TEXT;"),
+    
+    text("ALTER TABLE application ADD COLUMN interview_scheduled BOOLEAN;"),
+    
+    text("ALTER TABLE hired ADD COLUMN hire_date TEXT;")
+]
+
+# Execute each query
+with db.engine.connect() as connection:
+    for query in sql_queries:
+        try:
+            connection.execute(query)
+            print(f"Executed: {query}")
+        except Exception as e:
+            print(f"Error executing {query}: {e}")
+
+print("Columns added successfully.")
