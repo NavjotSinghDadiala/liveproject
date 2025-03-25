@@ -14,7 +14,7 @@ The **RRTTC Job Portal Website** connects job seekers with employers efficiently
 ### **Frontend Development Team**
 - **Aman Pal (Lead):** Worked on home and login page, Admin Dashboard, integrated all dashboards
 - **Navjot Singh:** Worked on home page , register and login page(Frontend) , integrated all dashboard and routers
-- **Khushi:** Created home page, admin page
+- **Khushi:** Created Admin dashboard and user dashboard 
 - **Akash:** Created applicant dashboard
 - **Ananya:** Created employer dashboard, helped in wireframe, worked on user dashboard (Backend)
 - **Swamiya:** Worked on career opportunities and employer dashboard, worked on employer dashboard (Backend)
